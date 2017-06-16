@@ -1,7 +1,6 @@
 from __future__ import print_function
 import serial
 import pygame
-import time
 import sys
 import os
 
@@ -21,10 +20,7 @@ ser = serial.Serial('/dev/ttyUSB0', timeout=1)
 os.system('clear')
 
 while(1):
-	# I don't totally understand the inner workings of pygame, but this is necessary to update joystick state
 	event = pygame.event.poll()
-	# can add delay here
-	time.sleep(1.3)
 	print(str(convert_range(cmdjoystick.get_axis(1))))
 	print(str(convert_range(cmdjoystick.get_axis(0))))
 	print(str(convert_range(camjoystick.get_axis(0))))
