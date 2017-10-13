@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $1 = "" ]; then
+if [ "$1" = "" ]; then
 	echo "Usage: ./topcatStream.sh [delay in milliseconds]"
 	exit 0
 fi

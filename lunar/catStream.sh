@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ $1 = "" ]; then
+if [ "$1" = "" ]; then
 	echo "Usage: ./catStream.sh [delay in milliseconds]"
 	exit 0
 fi
