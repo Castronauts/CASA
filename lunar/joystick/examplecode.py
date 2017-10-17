@@ -30,7 +30,6 @@ class TextPrint:
     def unindent(self):
         self.x -= 10
 
-
 pygame.init()
 
 # Set the width and height of the screen [width,height]
