@@ -12,7 +12,7 @@ cmdjoystick = pygame.joystick.Joystick(0)
 cmdjoystick.init()
 
 arm = pyuarm.get_uarm()
-s = 5
+s = 2
 suction = False
 gripper = False
 time.sleep(5)
