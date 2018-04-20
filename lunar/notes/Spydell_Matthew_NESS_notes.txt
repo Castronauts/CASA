@@ -1,0 +1,28 @@
+Assembly experiment metrics for success
+- Ask Terry
+- Ask Nisar
+- Trust (how much a human trusts a robot, how many times a human takes over)
+- How far from making an optimal connection
+
+Cameras
+- Rolling shutter camera (not good for machine learning)
+- Global shutter camera (good for machine learning) maybe $100
+- OpenMV camera?
+
+Lockheed
+- DSG might be launched on EM-2 (no interaction between Orion and DSG on EM-2)
+- EM-3 brings first habitat module; Orion will dock
+
+Terry Fong
+- Earth-to-Moon 10-15 second latency because of buffering and current Deep Space Network (DSN)
+- In the immediate future real-time high-speed operations is not important. It's about science traversal missions (constantly stopping)
+- What operation requires faster human interaction? That would require real-time operation
+- High computing power spacecraft and rover in close proximity could drastically increase the amount of important science conducted; it's not about speeding operations up, it's about doing more because data doesn't need to be sent all the way back to Earth.
+
+Nisar (CU Boulder)
+- Human in the loop explortation
+- Who to contact when a problem occurs
+
+- Create a stronger interface between autonomous systems/programming and scientists
+- Create on-the-fly reprogrammable autonomy for scientists
+- Get scientists into the loop of autnonomous system design
