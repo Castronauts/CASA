@@ -1,0 +1,25 @@
+final_robot:
+  final_robot_joint_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints:
+      - First_Joint_Axis
+      - Second_Joint_Axis
+      - Third_Joint_Axis
+      - Fourth_Joint_Axis
+      - Fifth_Joint_Axis
+
+    gains:
+      First_Joint_Axis: {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
+      Second_Joint_Axis: {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
+      Third_Joint_Axis: {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
+      Fourth_Joint_Axis: {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
+      Fifth_Joint_Axis: {p: 1000.0, i: 0.0, d: 0.1, i_clamp: 0.0}
+
+  gripper_controller:
+    type: "position_controllers/JointTrajectoryController"
+    joints:
+      - Sixth_Joint_Axis
+      - Seventh_Joint_Axis
+    gains:
+      Sixth_Joint_Axis: {p: 50.0, d: 1.0, i: 0.01, i_clamp: 1.0}
+      Seventh_Joint_Axis: {p: 50.0, d: 1.0, i: 0.01, i_clamp: 1.0}

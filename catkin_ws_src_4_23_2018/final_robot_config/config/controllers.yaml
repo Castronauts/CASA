@@ -1,0 +1,19 @@
+controller_manager_ns: controller_manager
+controller_list:
+  - name: final_robot/final_robot_joint_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+      - First_Joint_Axis
+      - Second_Joint_Axis
+      - Third_Joint_Axis
+      - Fourth_Joint_Axis
+      - Fifth_Joint_Axis
+  - name: final_robot/gripper_controller
+    action_ns: follow_joint_trajectory
+    type: FollowJointTrajectory
+    default: true
+    joints:
+      - Sixth_Joint_Axis
+      - Seventh_Joint_Axis
