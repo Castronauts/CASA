@@ -1,0 +1,26 @@
+1-844-467-6272 passcode: 678539
+Alex Janas and Billy Gallagher
+
+Agenda:
+-Jack recommended contacing you for perspective on robotic arms and autonomous servicing/assembly
+-Explain our goal with the arm and our research
+
+-Where does teleoperation come in to play? Where does autonomy come in to play?
+-Would you have like Restore-L to use completely autonomous technology or is direct human involvement still necessary?
+Trade off time-savings (mission and latency) for accuracy.
+Supervised autonomy - interplay of human interaction and autonomous systems. Verification of system operations by humans.
+4-7 second time delay for LEO.
+Powerful computing is difficult given the radiation.
+High difficulty when aligning robotic arms using controls.
+Identify various failure modes and how to recover.
+
+-Given our type of experiment (simple telescope assembly) and your experience, what is possible with a COTS arm?
+
+
+-Are there any constraints involving teleoperated and autonomous assembly that have not been investigated fully?
+Video feed constraints - 8-12 cameras, only a couple operating at a time because of limited bandwidth.
+Close up views and wide view for situational awareness, minimum two cameras for awareness and two for aligning arm
+
+
+--Cytons arm
+--Edge robots
