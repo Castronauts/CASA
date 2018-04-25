@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+if [ "$1" = "" ]; then
+    echo "Usage: ./catVideo <width(in px)> <height(in px)> <framerate> <computer IP> <port number>"
+    exit 0
+fi 
+
+if [ "$2" = "" ]; then
+    echo "Please enter a height in pixels"
+    exit 0
+fi
+
+if [ "$3" = "" ]; then
+    echo "Please enter a framerate"
+    exit 0
+fi 
+
+if [ "$4" = "" ]; then
+    echo "Please enter the clients IP address"
+    exit 0
+fi
+
+if [ "$5" = "" ]; then
+    echo "Please enter port number"
+    exit 0
+fi
+
+echo "Sending video stream to client:$4 on port:$5"
+
+raspivid -t 0 -w $1 -h $2 -fps $3 -b 200000000 --nopreview -o - | nc $4 $5
