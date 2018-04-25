@@ -1,0 +1,5 @@
+sudo ifconfig wlan0 down 
+sudo iwconfig wlan0 mode Ad-hoc 
+sudo iwconfig wlan0 essid AdHawk
+
+sudo ifconfig wlan0 192.168.1.2 netmask 255.255.255.0 
