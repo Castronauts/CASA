@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ "$1" = "" ]; then
 	echo "Usage: ./catStream.sh [delay in milliseconds]"
