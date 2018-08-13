@@ -1,7 +1,0 @@
-<launch>
-	<rosparam file="$(find final_robot_gazebo)/config/trajectory_control.yaml" command="load"/>
-
-  <node name="final_robot_controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
-    output="screen" ns="/final_robot" args="final_robot_joint_controller 						      gripper_controller"/>
-
-</launch>
