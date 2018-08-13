@@ -1,0 +1,4 @@
+[submodule "ARM_System/ROS/src_user/dynamixel_motor_library"]
+	path = ARM_System/ROS/src_user/dynamixel_motor_library
+	url = git://github.com/arebgun/dynamixel_motor.git
+        ignore = dirty
