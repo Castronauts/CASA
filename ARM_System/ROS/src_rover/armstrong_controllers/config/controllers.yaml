@@ -1,0 +1,96 @@
+joint1_controller:
+  controller:
+      package: dynamixel_controllers
+      module: joint_position_controller
+      type: JointPositionController
+  joint_name: Joint_1
+  joint_speed: 0.1
+  motor:
+      id: 1
+      init: 2048
+      min: 0
+      max: 4095
+
+#ID 3 slave device for ID 2(position or joint control)
+#Had to change dynamixel_controller library code
+joint2_controller:
+  controller:
+      package: dynamixel_controllers
+      module: joint_position_controller_dual_motor
+      type: JointPositionControllerDual
+  joint_name: Joint_2
+  joint_speed: 0.1
+  motor_master:
+      id: 2
+      init: 2048
+      min: 800
+      max: 3300
+  motor_slave:
+      id: 3
+
+joint3_controller:
+  controller:
+      package: dynamixel_controllers
+      module: joint_position_controller
+      type: JointPositionController
+  joint_name: Joint_3
+  joint_speed: 0.1
+  motor:
+      id: 4
+      init: 3069
+      min: 1300
+      max: 3300
+
+joint4_controller:
+  controller:
+      package: dynamixel_controllers
+      module: joint_position_controller
+      type: JointPositionController
+  joint_name: Joint_4
+  joint_speed: 0.1
+  motor:
+      id: 5
+      init: 2048
+      min: 0
+      max: 4095
+
+joint5_controller:
+  controller:
+      package: dynamixel_controllers
+      module: joint_position_controller
+      type: JointPositionController
+  joint_name: Joint_5
+  joint_speed: 0.1
+  motor:
+      id: 6
+      init: 2048
+      min: 800
+      max: 3300
+
+joint6_controller:
+  controller:
+      package: dynamixel_controllers
+      module: joint_position_controller
+      type: JointPositionController
+  joint_name: Joint_6
+  joint_speed: 0.1
+  motor:
+      id: 7
+      init: 512
+      min: 0
+      max: 1023
+
+dual_gripper_controller:
+  controller:
+      package: dynamixel_controllers
+      module: joint_position_controller_dual_motor
+      type: JointPositionControllerDual
+  joint_name: Joint_7
+  joint_speed: 1.17
+  motor_master:
+      id: 8
+      init: 734
+      min: 512
+      max: 734
+  motor_slave:
+      id: 9
