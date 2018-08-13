@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<data>
+	<obstacle name='front_ground'>
+		<dim0_size>2.0</dim0_size>
+		<dim1_size>2.0</dim1_size>
+		<dim2_size>2.0</dim2_size>
+		<orientation_w>1.0</orientation_w>
+		<position_x>1.1</position_x>
+		<position_y>0.0</position_y>
+		<position_z>-1.0</position_z>
+	</obstacle>
+	<obstacle name='back_ground'>
+		<dim0_size>2.0</dim0_size>
+		<dim1_size>2.0</dim1_size>
+		<dim2_size>2.0</dim2_size>
+		<orientation_w>1.0</orientation_w>
+		<position_x>-1.2</position_x>
+		<position_y>0.0</position_y>
+		<position_z>-1.0</position_z>
+	</obstacle>
+	<obstacle name='left_ground'>
+		<dim0_size>2.0</dim0_size>
+		<dim1_size>2.0</dim1_size>
+		<dim2_size>2.0</dim2_size>
+		<orientation_w>1.0</orientation_w>
+		<position_x>0.0</position_x>
+		<position_y>1.2</position_y>
+		<position_z>-1.0</position_z>
+	</obstacle>
+	<obstacle name='right_ground'>
+		<dim0_size>2.0</dim0_size>
+		<dim1_size>2.0</dim1_size>
+		<dim2_size>2.0</dim2_size>
+		<orientation_w>1.0</orientation_w>
+		<position_x>0.0</position_x>
+		<position_y>-1.2</position_y>
+		<position_z>-1.0</position_z>
+	</obstacle>
+	<obstacle name='table'>
+		<dim0_size>0.4</dim0_size>
+		<dim1_size>0.4</dim1_size>
+		<dim2_size>0.4</dim2_size>
+		<orientation_w>1.0</orientation_w>
+		<position_x>0.6</position_x>
+		<position_y>0.0</position_y>
+		<position_z>0.6</position_z>
+	</obstacle>
+</data>

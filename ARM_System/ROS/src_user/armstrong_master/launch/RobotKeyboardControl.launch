@@ -1,0 +1,5 @@
+<launch>
+	<!--<node name="get_obstacle_objects" pkg="armstrong_master" type="get_obstacle_objects.py" args="$(find armstrong_master)/config/table_and_ground_obstacles.xml"/>-->
+	<node name="controller_publisher" pkg="armstrong_master" type="controller_publisher.py" args="$(find armstrong_master)/config/cartesian.xml $(find armstrong_master)/config/cartesian_keyboard.xml 10"/>
+	<node name="cartesian_keyboard_controller_v2" pkg="armstrong_master" type="cartesian_keyboard_controller_v2" />
+</launch>

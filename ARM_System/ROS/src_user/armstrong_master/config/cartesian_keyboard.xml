@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<data>
+	<key name='d'>
+		<input_name>x_axis</input_name>
+		<pressed_value>1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
+	<key name='a'>
+		<input_name>x_axis</input_name>
+		<pressed_value>-1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
+	<key name='s'>
+		<input_name>y_axis</input_name>
+		<pressed_value>-1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
+	<key name='w'>
+		<input_name>y_axis</input_name>
+		<pressed_value>1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
+	<key name='e'>
+		<input_name>z_axis</input_name>
+		<pressed_value>-1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
+	<key name='q'>
+		<input_name>z_axis</input_name>
+		<pressed_value>1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
+</data>

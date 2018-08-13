@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: mastering_ros_robot
+    relative_path: urdf/armstrong.xacro
+    xacro_args: "--inorder "
+  SRDF:
+    relative_path: config/armstrong.srdf
+  CONFIG:
+    author_name: Alex
+    author_email: alsa3744@colorado.edu
+    generated_timestamp: 1533851550
