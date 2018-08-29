@@ -19,16 +19,22 @@ def start_node():
 
 
 if __name__ == '__main__':
-    rospy.init_node("Robot_Controller")
-    pub = rospy.Publisher('control_signal',	Point, queue_size=1)
-    kc, hz = start_node()
-    rate = rospy.Rate(hz)
-    while (not rospy.is_shutdown()):
-    	controls = kc.get_all_controls()
-    	control_msg = Point()
-    	control_msg.x = controls["x_axis"]["input"]
-    	control_msg.y = controls["y_axis"]["input"]
-    	control_msg.z = controls["z_axis"]["input"]
-    	pub.publish(control_msg)
-    	rate.sleep()
-    kc.stop_listener()
+	rospy.init_node("Robot_Controller")
+	pub_1 = rospy.Publisher('control_signal', Point, queue_size=10)
+	pub_2 = rospy.Publisher('gripper_signal', Point, queue_size=10)
+	kc, hz = start_node()
+	rate = rospy.Rate(hz)
+	
+	while (not rospy.is_shutdown()):
+		controls = kc.get_all_controls()
+		control_msg = Point()
+		gripper_msg = Point()
+		control_msg.x = controls["x_axis"]["input"]
+		control_msg.y = controls["y_axis"]["input"]
+		control_msg.z = controls["z_axis"]["input"]
+		gripper_msg.x = controls["gripper"]["input"] #Only using x for gripper signal. To lazy to make custom message and service
+		pub_1.publish(control_msg)
+		pub_2.publish(gripper_msg)
+		rate.sleep()
+		
+	kc.stop_listener()
