@@ -9,4 +9,13 @@
 	<input name='z_axis'>
 		<type>float</type>
 	</input>
+	<input name='gripper'>
+		<type>float</type>
+	</input>
+	<input name='fwd_bck'>
+		<type>float</type>
+	</input>
+	<input name='left_right'>
+		<type>float</type>
+	</input>
 </data>

@@ -47,8 +47,6 @@
     <disable_collisions link1="Link_2" link2="base_link" reason="Never" />
     <disable_collisions link1="Link_3" link2="Link_4" reason="Adjacent" />
     <disable_collisions link1="Link_3" link2="Link_5" reason="Never" />
-    <disable_collisions link1="Link_3" link2="Link_6" reason="Never" />
-    <disable_collisions link1="Link_3" link2="Link_EEF" reason="Never" />
     <disable_collisions link1="Link_4" link2="Link_5" reason="Adjacent" />
     <disable_collisions link1="Link_4" link2="Link_6" reason="Never" />
     <disable_collisions link1="Link_4" link2="Link_7" reason="Never" />

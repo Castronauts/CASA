@@ -1,8 +1,9 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
+import sys
 import rospy
 import xml
-import sys
 import KeyboardController
 from geometry_msgs.msg import Point
 
@@ -22,6 +23,7 @@ if __name__ == '__main__':
 	rospy.init_node("Robot_Controller")
 	pub_1 = rospy.Publisher('control_signal', Point, queue_size=10)
 	pub_2 = rospy.Publisher('gripper_signal', Point, queue_size=10)
+	pub_3 = rospy.Publisher('arlo_signal', Point, queue_size=10)
 	kc, hz = start_node()
 	rate = rospy.Rate(hz)
 	
@@ -29,12 +31,16 @@ if __name__ == '__main__':
 		controls = kc.get_all_controls()
 		control_msg = Point()
 		gripper_msg = Point()
+		arlo_msg = Point()
 		control_msg.x = controls["x_axis"]["input"]
 		control_msg.y = controls["y_axis"]["input"]
 		control_msg.z = controls["z_axis"]["input"]
 		gripper_msg.x = controls["gripper"]["input"] #Only using x for gripper signal. To lazy to make custom message and service
+		arlo_msg.x = controls["fwd_bck"]["input"]
+		arlo_msg.y = controls["left_right"]["input"]
 		pub_1.publish(control_msg)
 		pub_2.publish(gripper_msg)
+		pub_3.publish(arlo_msg)
 		rate.sleep()
 		
 	kc.stop_listener()

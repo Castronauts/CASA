@@ -36,6 +36,7 @@ bool arlo_set = false;
 float gripper_signal = 0.0;
 float gripper_load = 0.0;
 std_msgs::String arlo_speed;
+int control_change = 0;
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 //Function Declarations
@@ -47,6 +48,7 @@ void updateControlSignal(const geometry_msgs::Point::ConstPtr& msg)
 		control_signals[0] = msg->x;
 		control_signals[1] = msg->y;
 		control_signals[2] = msg->z;
+		control_change = 1;
 	}
 }
 
@@ -86,12 +88,12 @@ void moveToSpecifiedPose(moveit::planning_interface::MoveGroupInterface * group,
 		group->move();
 	}
 
-	sleep(3.0);
+	sleep(5.0);
 }
 
 void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface * planning, moveit::planning_interface::MoveGroupInterface * move)
 {
-	//Creating ground collision object being 2 x 2 x 0.05 meter box from center of robot
+	//Creating ground collision object being 2 x 2 x 0.03 meter box from center of robot
 	moveit_msgs::CollisionObject collision_object;
 	collision_object.header.frame_id = move->getPlanningFrame();
 	collision_object.id = "ground";
@@ -121,78 +123,66 @@ void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface * pl
 	sleep(2.0);
 }
 
-
-void updateMovement(double distance, int setting, moveit::planning_interface::MoveGroupInterface * move, geometry_msgs::PoseStamped * target)
+void updateTargetPose(geometry_msgs::PoseStamped * target, moveit::planning_interface::MoveGroupInterface * move)
 {
-	//Don't move trajectory signal if any reaches the max.
-	int no_move = 0; 
+	//Get what state it is left at
+	geometry_msgs::PoseStamped temp_pose;
+	/*temp_pose = move->getCurrentPose();
 
-	//Set Target Pose Based on setting
-	if (setting == 0) //X Setting
+	//Make sure the orientation stays the same
+	temp_pose.pose.orientation = target->pose.orientation;
+
+	//Move to that orientation
+	move->setPoseTarget(temp_pose.pose);
+	move->move();*/
+
+	//Once moved then set the target position to begin again
+	temp_pose = move->getCurrentPose();
+	target->pose.position = temp_pose.pose.position;
+}
+
+void getTargetPosition(int * setting, geometry_msgs::PoseStamped * target)
+{
+	if(control_signals[0] != 0.0)
 	{
-		target->pose.position.x = target->pose.position.x + control_signals[0]*distance; //Only move x direction
-
-		if (target->pose.position.x < -0.2 || target->pose.position.x > 0.2) //Check left right
+		target->pose.position.x = control_signals[0]*0.2;
+		*setting = 0;
+	}
+	else if(control_signals[1] != 0.0)
+	{
+		if (control_signals[1] > 0)
 		{
-			no_move = 1; 
-			target->pose.position.x = target->pose.position.x - control_signals[0]*distance;
+			target->pose.position.y = 0.54;
 		}
-
-		ROS_ERROR("X[%lf]", target->pose.position.x);
-	}
-	if (setting == 1) //Y Setting
-	{
-		target->pose.position.y = target->pose.position.y + control_signals[1]*distance; //Only move y direction
-
-		if (target->pose.position.y < 0.36 || target->pose.position.y > 0.54) //Check forward backward
+		else
 		{
-			no_move = 1; 
-			target->pose.position.y = target->pose.position.y - control_signals[1]*distance;
+			target->pose.position.y = 0.36;
 		}
-
-		ROS_ERROR("Y[%lf]", target->pose.position.y);
+		*setting = 1;
 	}
-	if (setting == 2) //Z Setting
+	else if(control_signals[2] != 0.0)
 	{
-		target->pose.position.z = target->pose.position.z + control_signals[2]*distance; //Only move z direction
-
-		if (target->pose.position.z < 0.05 || target->pose.position.z > 0.35) //Check top and down
+		if (control_signals[2] > 0)
 		{
-			no_move = 1; 
-			target->pose.position.z = target->pose.position.z - control_signals[2]*distance;
+			target->pose.position.z = 0.35;
 		}
-
-		ROS_ERROR("Z[%lf]", target->pose.position.z);
-	}
-
-	//Set waypoints for which to compute path
-	std::vector<geometry_msgs::Pose> waypoints;
-	waypoints.push_back(target->pose);
-	moveit_msgs::RobotTrajectory trajectory;
-	moveit::planning_interface::MoveGroupInterface::Plan my_plan;
-	//robot_trajectory::RobotTrajectory rt_planner(move->getRobotModel(), "Arm");
-	//trajectory_processing::IterativeParabolicTimeParameterization time_planner;
-
-	//Compute cartesian path
-	double ret = move->computeCartesianPath(waypoints, distance*.5, 0, trajectory);
-
-	/*Set TimeStamps or pseudo velocity and acceleration
-	rt_planner.setRobotTrajectoryMsg(*(move->getCurrentState()), trajectory);
-	time_planner.computeTimeStamps(rt_planner, 0.5, 0.5); //Trajectory, velocity, acceleration
-	rt_planner.getRobotTrajectoryMsg(trajectory);*/
-
-	if (no_move == 0) //If not at max limits then still move else do nothing
-	{
-		//Execute trajectory synchronously
-		ROS_ERROR("RET[%lf]", ret); 
-		my_plan.trajectory_ = trajectory;
-		move->execute(my_plan);
-	}
-	else
-	{
-		ROS_ERROR("No Move");
+		else
+		{
+			target->pose.position.z = 0.06;
+		}
+		*setting = 2;
 	}
 }
+
+void computeStraightTrajectory(geometry_msgs::PoseStamped * target, moveit::planning_interface::MoveGroupInterface * move, double * ret, moveit_msgs::RobotTrajectory * trajectory)
+{
+	std::vector<geometry_msgs::Pose> waypoints;
+	waypoints.push_back(target->pose);
+
+	*ret = move->computeCartesianPath(waypoints, 0.01, 0, *trajectory);
+}
+
+
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 //Main Function
@@ -202,7 +192,7 @@ int main(int argc, char **argv)
 	//ROS Declarations
 	ros::init(argc, argv, "cartesian_keyboard_controller");
 	ros::NodeHandle nh;
-	ros::AsyncSpinner spinner(3); //3 working for all signals
+	ros::AsyncSpinner spinner(2); //2 working for all signals
 	spinner.start();
 
 	//Move It Declarations
@@ -210,6 +200,8 @@ int main(int argc, char **argv)
 	moveit::planning_interface::MoveGroupInterface move_group(PLANNING_GROUP);
 	moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
 	const robot_state::JointModelGroup * joint_model_group = move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
+	robot_trajectory::RobotTrajectory rt_planner(move_group.getRobotModel(), PLANNING_GROUP);
+	trajectory_processing::IterativeParabolicTimeParameterization time_planner;
 
 	//Controller Topic Signals
 	ros::Subscriber control_sub = nh.subscribe("control_signal", 10, updateControlSignal); //10 buffer message size might be better response time than 1
@@ -227,7 +219,7 @@ int main(int argc, char **argv)
 
 	//Save initial behavior
 	moveToSpecifiedPose(&move_group, 0); //Move to position 0
-	target_pose = move_group.getCurrentPose();
+	target_pose = move_group.getCurrentPose();  
 
 	//Add initial collision objects
 	addCollisionObjects(&planning_scene_interface, &move_group);
@@ -236,14 +228,14 @@ int main(int argc, char **argv)
 	ros::Rate r(20);
 
 	//Control Signal Settings
-	int setting = 0; //0-X, 1-Y, 2-Z
-	double distance = 0.005; //Meters
+	int setting = -1; //0-X, 1-Y, 2-Z
 
 	//Gripper Settings
 	std_msgs::Float64 gripper_distance;
 	std_msgs::String arlo_string;
 	gripper_distance.data = 0.0;
 	arlo_string.data = "rst\r";
+	arlo_speed.data = 10.0;
 	gripper_pub.publish(gripper_distance);
 	arlo_pub.publish(arlo_string);
 
@@ -302,31 +294,42 @@ int main(int argc, char **argv)
 			ros::Duration(0.02).sleep();
 		}
 
-		//Keep Planning X direction until released
-		while(control_signals[0] != 0)
+		//Check arm movement/joystick
+		if (control_change)
 		{
-			//X Setting
-			setting = 0;
+			control_change = 0;
+			move_group.stop();
+			
+			//Correct position and move it if any misalignments
+			ros::Duration(0.1).sleep(); //Wait so move group can calculate its position quick enough
+			updateTargetPose(&(target_pose), &(move_group));
+			
+			if(!(control_signals[0] == 0.0 && control_signals[1] == 0.0 && control_signals[2] == 0.0))
+			{
+				double ret; //Return number from compute
+				moveit::planning_interface::MoveGroupInterface::Plan my_plan; //Plan for final move
+				moveit_msgs::RobotTrajectory trajectory; //Straight path trajectory, might need constraints
 
-			updateMovement(distance, setting, &move_group, &target_pose);
-		}
+				//Set correct target position based on which control signal is set
+				getTargetPosition(&setting, &target_pose);
 
-		//Plan Y direction until released
-		while(control_signals[1] != 0)
-		{
-			//Y Setting
-			setting = 1;
+				//Compute straight trajectory and set it in trajectory and set ret (i.e shouldnt be 0)
+				computeStraightTrajectory(&target_pose, &move_group, &ret, &trajectory);
 
-			updateMovement(distance, setting, &move_group, &target_pose);
-		}
+				if (ret != 0) //Need to reposition arm to keep moving
+				{
+					ROS_ERROR("RET[%lf]", ret);
+					//Set TimeStamps or pseudo velocity and acceleration
+					rt_planner.setRobotTrajectoryMsg(*(move_group.getCurrentState()), trajectory);
+					time_planner.computeTimeStamps(rt_planner, 0.05, 0.05); //Trajectory, velocity, acceleration
+					rt_planner.getRobotTrajectoryMsg(trajectory);
 
-		//Plan Z direciton until released
-		while(control_signals[2] != 0)
-		{
-			//Z Setting
-			setting = 2;
+					//Set plan and execute
+					my_plan.trajectory_ = trajectory;
+					move_group.asyncExecute(my_plan);
+				}
+			}
 
-			updateMovement(distance, setting, &move_group, &target_pose);
 		}
 
 		//ROS Syntax

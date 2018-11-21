@@ -30,4 +30,34 @@
 		<pressed_value>1.0</pressed_value>
 		<unpressed_value>0.0</unpressed_value>
 	</key>
+	<key name='f'>
+		<input_name>gripper</input_name>
+		<pressed_value>1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
+	<key name='g'>
+		<input_name>gripper</input_name>
+		<pressed_value>-1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
+	<key name='i'>
+		<input_name>fwd_bck</input_name>
+		<pressed_value>1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
+	<key name='k'>
+		<input_name>fwd_bck</input_name>
+		<pressed_value>-1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
+	<key name='j'>
+		<input_name>left_right</input_name>
+		<pressed_value>1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
+	<key name='l'>
+		<input_name>left_right</input_name>
+		<pressed_value>-1.0</pressed_value>
+		<unpressed_value>0.0</unpressed_value>
+	</key>
 </data>

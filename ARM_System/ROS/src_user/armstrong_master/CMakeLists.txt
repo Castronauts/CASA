@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   sensor_msgs
+  dynamixel_msgs
   std_msgs
   tf
 )
@@ -112,7 +113,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES armstrong_master
-   CATKIN_DEPENDS actionlib moveit_core moveit_ros_planning_interface moveit_msgs roscpp rospy sensor_msgs std_msgs tf
+   CATKIN_DEPENDS actionlib moveit_core moveit_ros_planning_interface moveit_msgs roscpp rospy sensor_msgs dynamixel_msgs std_msgs tf
 #  DEPENDS system_lib
 )
 
@@ -146,6 +147,9 @@ target_link_libraries(cartesian_keyboard_controller ${catkin_LIBRARIES})
 
 add_executable(cartesian_keyboard_controller_v2 src/cartesian_keyboard_controller_v2.cpp)
 target_link_libraries(cartesian_keyboard_controller_v2 ${catkin_LIBRARIES})
+
+add_executable(cartesian_keyboard_controller_v3 src/cartesian_keyboard_controller_v3.cpp)
+target_link_libraries(cartesian_keyboard_controller_v3 ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
