@@ -11,6 +11,7 @@ import math
 #ROS Libraries
 import rospy
 from std_msgs.msg import Float64, String
+from geometry_msgs.msg import Point
 from dynamixel_msgs.msg import JointState
 
 #----------------------------------------------------------------------------------------------------
@@ -84,6 +85,10 @@ if __name__ == '__main__':
     #----------------------------------------------------------------------------------------------------
     rospy.init_node("joystick_controller")
 
+    #Initialize arm stuff
+    arm_pub = rospy.Publisher('control_signal', Point, queue_size=10)
+    arm_msg = Point()
+
     #Initialize gripper stuff
     gripper_pub = rospy.Publisher("/dual_gripper_controller/command", Float64, queue_size=10)
     rospy.Subscriber("/dual_gripper_controller/state", JointState, updateGripperLoad)
@@ -142,7 +147,8 @@ if __name__ == '__main__':
 
                 #Just up
                 else:
-                    print("Up")
+                    arm_msg.z = 1.0
+                    arm_pub.publish(arm_msg)
 
                 #Recheck values
                 pygame.event.get()
@@ -161,7 +167,8 @@ if __name__ == '__main__':
 
                 #Just down
                 else:
-                    print("Down")
+                    arm_msg.z = -1.0
+                    arm_pub.publish(arm_msg)
 
                 #Recheck values
                 pygame.event.get()
@@ -170,6 +177,14 @@ if __name__ == '__main__':
                 
                 rospy.sleep(0.1)
 
+            rospy.sleep(0.1)
+
+            #Turn off motion
+            arm_msg.z = 0.0
+            arm_msg.y = 0.0
+            arm_msg.x = 0.0
+            arm_pub.publish(arm_msg)
+
         #Check only joystick arm x and y
         if ((abs(x_right) >= 0.6 or abs(y_right) >= 0.6) and (arm_up == 0.0 and arm_down == 0.0)):
 
@@ -177,9 +192,43 @@ if __name__ == '__main__':
 
                 #Break if bumpers are pressed to go into that mode
                 if(arm_up != 0.0 or arm_down != 0.0):
+                    arm_msg.z = 0.0
+                    arm_msg.y = 0.0
+                    arm_msg.x = 0.0
+                    arm_pub.publish(arm_msg)
+                    rospy.sleep(0.1)
                     break
 
-                print("Only xy arm")
+                #Get heading
+                final_degree = degreeHeading(x_right, y_right)
+
+                #Check forward signal
+                if ((final_degree > 315 and final_degree <=359) or (final_degree >= 0 and final_degree <= 45)):
+                    arm_msg.z = 0.0
+                    arm_msg.y = 1.0
+                    arm_msg.x = 0.0
+                    arm_pub.publish(arm_msg)
+
+                #Check right signal
+                elif (final_degree > 45 and final_degree <= 135):
+                    arm_msg.z = 0.0
+                    arm_msg.y = 0.0
+                    arm_msg.x = 1.0
+                    arm_pub.publish(arm_msg)
+
+                #Check backward signal
+                elif (final_degree > 135 and final_degree <= 225):
+                    arm_msg.z = 0.0
+                    arm_msg.y = -1.0
+                    arm_msg.x = 0.0
+                    arm_pub.publish(arm_msg)
+
+                #Check left signal
+                elif (final_degree > 225 and final_degree <= 315):
+                    arm_msg.z = 0.0
+                    arm_msg.y = 0.0
+                    arm_msg.x = -1.0
+                    arm_pub.publish(arm_msg)
                 
                 #Recheck values
                 pygame.event.get()
@@ -187,6 +236,15 @@ if __name__ == '__main__':
                 arm_up = joystick.get_button(5)
                 x_right = joystick.get_axis(3)
                 y_right = joystick.get_axis(4)
+
+                rospy.sleep(0.1)
+
+            #Shutdown values
+            arm_msg.z = 0.0
+            arm_msg.y = 0.0
+            arm_msg.x = 0.0
+            arm_pub.publish(arm_msg)
+            rospy.sleep(0.1)
 
 
         #----------------------------------------------------------------------------------------------------

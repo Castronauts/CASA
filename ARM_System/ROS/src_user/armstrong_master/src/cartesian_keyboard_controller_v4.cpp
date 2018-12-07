@@ -119,7 +119,7 @@ void getTargetPosition(int * setting, geometry_msgs::PoseStamped * target)
 	{
 		if (control_signals[1] > 0)
 		{
-			target->pose.position.y = 0.54;
+			target->pose.position.y = 0.50;
 		}
 		else
 		{
@@ -189,7 +189,7 @@ int main(int argc, char **argv)
 
 	while(ros::ok())
 	{
-		//Check arm movement/joystick
+		//Check arm movement/joystick  
 		if (control_change)
 		{
 			control_change = 0;

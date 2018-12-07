@@ -151,6 +151,9 @@ target_link_libraries(cartesian_keyboard_controller_v2 ${catkin_LIBRARIES})
 add_executable(cartesian_keyboard_controller_v3 src/cartesian_keyboard_controller_v3.cpp)
 target_link_libraries(cartesian_keyboard_controller_v3 ${catkin_LIBRARIES})
 
+add_executable(cartesian_keyboard_controller_v4 src/cartesian_keyboard_controller_v4.cpp)
+target_link_libraries(cartesian_keyboard_controller_v4 ${catkin_LIBRARIES})
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use
