@@ -17,6 +17,7 @@ from dynamixel_msgs.msg import JointState
 #----------------------------------------------------------------------------------------------------
 #Global variables
 #----------------------------------------------------------------------------------------------------
+gripper_load = 0.0
 
 #----------------------------------------------------------------------------------------------------
 #Function Declarations
@@ -32,7 +33,10 @@ def onStateChanged(state, msg):
        isConnected = False
 
 def updateGripperLoad(data):
-    pass
+    global gripper_load
+    gripper_load = data.load
+
+    print (gripper_load)
 
 def degreeHeading(x, y):
     #Convert to degree heading
@@ -253,7 +257,7 @@ if __name__ == '__main__':
         #Check open close buttons
         if (open_button != 0.0 or close_button != 0.0):
             #Check open button only
-            while (open_button != 0 and close_button == 0.0 and gripper_msg.data >= 0.0):
+            while (open_button != 0 and close_button == 0.0 and gripper_msg.data >= -0.4):
                 #Send and sleep to repeat
                 gripper_msg.data = gripper_msg.data - 0.01
                 gripper_pub.publish(gripper_msg)
@@ -264,7 +268,7 @@ if __name__ == '__main__':
                 open_button = joystick.get_button(0)
 
             #Check close button only
-            while (close_button != 0 and open_button == 0.0 and gripper_msg.data <= 0.4):
+            while (close_button != 0 and open_button == 0.0 and gripper_msg.data <= 0.4 and gripper_load > -0.1):
                 #Send and sleep to repeat
                 gripper_msg.data = gripper_msg.data + 0.01
                 gripper_pub.publish(gripper_msg)
