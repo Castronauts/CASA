@@ -59,6 +59,8 @@
   <build_depend>std_msgs</build_depend>
   <build_depend>dynamixel_msgs</build_depend>
   <build_depend>tf</build_depend>
+  <build_depend>message_generation</build_depend>
+
   <build_export_depend>actionlib</build_export_depend>
   <build_export_depend>moveit_core</build_export_depend>
   <build_export_depend>moveit_ros_planning_interface</build_export_depend>
@@ -69,6 +71,8 @@
   <build_export_depend>std_msgs</build_export_depend>
   <build_export_depend>dynamixel_msgs</build_export_depend>
   <build_export_depend>tf</build_export_depend>
+  <build_export_depend>message_generation</build_export_depend>
+
   <exec_depend>actionlib</exec_depend>
   <exec_depend>moveit_core</exec_depend>
   <exec_depend>moveit_ros_planning_interface</exec_depend>
@@ -79,6 +83,7 @@
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>dynamixel_msgs</exec_depend>
   <exec_depend>tf</exec_depend>
+  <exec_depend>message_runtime</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

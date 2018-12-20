@@ -2,6 +2,7 @@
 #include "geometry_msgs/PoseStamped.h"
 #include "geometry_msgs/Point.h"
 #include "std_msgs/Float64.h"
+#include <std_msgs/Int64.h>
 #include "dynamixel_msgs/JointState.h"
 
 #include <moveit/kinematic_constraints/utils.h>
@@ -26,6 +27,12 @@
 #include <time.h>
 #include <stdio.h>
 #include <cmath>
+
+#define forward_limit 0.50
+#define backward_limit 0.36
+#define left_right_limit 0.2
+#define up_limit 0.3
+#define down_limit 0.06
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 //Global Variables
@@ -112,18 +119,18 @@ void getTargetPosition(int * setting, geometry_msgs::PoseStamped * target)
 {
 	if(control_signals[0] != 0.0)
 	{
-		target->pose.position.x = control_signals[0]*0.2;
+		target->pose.position.x = control_signals[0]*left_right_limit;
 		*setting = 0;
 	}
 	else if(control_signals[1] != 0.0)
 	{
 		if (control_signals[1] > 0)
 		{
-			target->pose.position.y = 0.50;
+			target->pose.position.y = forward_limit;
 		}
 		else
 		{
-			target->pose.position.y = 0.36;
+			target->pose.position.y = backward_limit;
 		}
 		*setting = 1;
 	}
@@ -131,11 +138,11 @@ void getTargetPosition(int * setting, geometry_msgs::PoseStamped * target)
 	{
 		if (control_signals[2] > 0)
 		{
-			target->pose.position.z = 0.35;
+			target->pose.position.z = up_limit;
 		}
 		else
 		{
-			target->pose.position.z = 0.06;
+			target->pose.position.z = down_limit;
 		}
 		*setting = 2;
 	}
@@ -170,13 +177,20 @@ int main(int argc, char **argv)
 
 	//Controller Topic Signals
 	ros::Subscriber control_sub = nh.subscribe("control_signal", 10, updateControlSignal); //10 buffer message size might be better response time than 1
-	
+
+	//Arm publisher for gui and xbox
+	ros::Publisher x_gui = nh.advertise<std_msgs::Int64>("x_gui", 10);
+	ros::Publisher y_gui = nh.advertise<std_msgs::Int64>("y_gui", 10);
+	ros::Publisher z_gui = nh.advertise<std_msgs::Int64>("z_gui", 10);
+	ros::Publisher xbox_vibrate = nh.advertise<std_msgs::Int64>("xbox_vibrate", 10);
+
 	//Poses needed to be saved
 	geometry_msgs::PoseStamped target_pose;
+	geometry_msgs::PoseStamped current_pose;
 
 	//Save initial behavior
 	moveToSpecifiedPose(&move_group, 0); //Move to position 0
-	target_pose = move_group.getCurrentPose();  
+	target_pose = move_group.getCurrentPose();
 
 	//Add initial collision objects
 	addCollisionObjects(&planning_scene_interface, &move_group);
@@ -186,19 +200,26 @@ int main(int argc, char **argv)
 
 	//Control Signal Settings
 	int setting = -1; //0-X, 1-Y, 2-Z
+	std_msgs::Int64 gui_msg;
+	double y_conversion = forward_limit - backward_limit;
+	double x_conversion = left_right_limit*2.0;
+	double z_conversion = up_limit - down_limit;
+	double temp = 0.0;
+	int gui_control = 0;
+	bool xbox_sent = false;
 
 	while(ros::ok())
 	{
-		//Check arm movement/joystick  
+		//Check arm movement/joystick
 		if (control_change)
 		{
 			control_change = 0;
 			move_group.stop();
-			
+
 			//Correct position and move it if any misalignments
 			ros::Duration(0.1).sleep(); //Wait so move group can calculate its position quick enough
 			updateTargetPose(&(target_pose), &(move_group));
-			
+
 			if(!(control_signals[0] == 0.0 && control_signals[1] == 0.0 && control_signals[2] == 0.0))
 			{
 				double ret; //Return number from compute
@@ -213,7 +234,6 @@ int main(int argc, char **argv)
 
 				if (ret != 0) //Need to reposition arm to keep moving
 				{
-					ROS_ERROR("RET[%lf]", ret);
 					//Set TimeStamps or pseudo velocity and acceleration
 					rt_planner.setRobotTrajectoryMsg(*(move_group.getCurrentState()), trajectory);
 					time_planner.computeTimeStamps(rt_planner, 0.1, 0.1); //Trajectory, velocity, acceleration
@@ -224,12 +244,71 @@ int main(int argc, char **argv)
 					move_group.asyncExecute(my_plan);
 				}
 			}
+			else
+			{
+				//So it doesn't keep publishing to gui for no reason
+				setting = -1;
+				xbox_sent = false;
+			}
 
+		}
+
+		//Constantly send updated position to gui
+		current_pose = move_group.getCurrentPose();
+
+		if (setting == 0) //Update x gui
+		{
+			temp = current_pose.pose.position.x;
+			temp = temp + left_right_limit; //Accounting for negative
+			gui_control = (int)((temp/(left_right_limit*2)) * 100.0);
+
+			if ((gui_control > 99 or gui_control < 1))
+			{
+				gui_msg.data = 1; //Vibrate setting
+				xbox_vibrate.publish(gui_msg);
+				ros::Duration(0.5).sleep();
+				xbox_sent = true;
+			}
+
+			gui_msg.data = gui_control;
+			x_gui.publish(gui_msg);
+		}
+		else if (setting == 1) //Update y gui
+		{
+			temp = current_pose.pose.position.y;
+			gui_control = (int)(((temp-backward_limit)/y_conversion) * 100.0);
+
+			if ((gui_control > 99 or gui_control < 1))
+			{
+				gui_msg.data = 1; //Vibrate setting
+				xbox_vibrate.publish(gui_msg);
+				ros::Duration(0.5).sleep();
+				xbox_sent = true;
+			}
+
+			gui_msg.data = gui_control;
+			y_gui.publish(gui_msg);
+		}
+		else if (setting == 2) //Update z gui
+		{
+			temp = current_pose.pose.position.z;
+			gui_control = (int)(((temp-down_limit)/z_conversion) * 100);
+
+			if ((gui_control > 99 or gui_control < 1))
+			{
+				gui_msg.data = 1; //Vibrate setting
+				xbox_vibrate.publish(gui_msg);
+				ros::Duration(0.5).sleep();
+				xbox_sent = true;
+			}
+
+			gui_msg.data = gui_control;
+			z_gui.publish(gui_msg);
 		}
 
 		//ROS Syntax
 		r.sleep();
 	}
-	
+
 	return 0;
 }
