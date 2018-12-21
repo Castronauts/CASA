@@ -91,11 +91,16 @@ class Joystick_Object(object):
 
     def updateGripperLoad(self, msg):
         self.gripper_load = msg.load
+        print(self.gripper_load)
 
     def vibrateXbox(self, msg):
         if (msg.data == 1):
             self.xbox.set_rumble(0.5, 0.5, 500)
             rospy.sleep(0.5)
+
+    def gripperVibrate(self):
+        self.xbox.set_rumble(0.8, 0.8, 800)
+        rospy.sleep(0.5)
 
     def degreeHeading(self, x, y):
         #Convert to degree heading
@@ -275,6 +280,10 @@ class Joystick_Object(object):
                     #Recheck values
                     pygame.event.get()
                     close_button = self.joystick.get_button(1)
+
+                #Send vibrate command for gripper gripper load
+                if (self.gripper_load < -0.15):
+                    self.gripperVibrate()
 
             #----------------------------------------------------------------------------------------------------
             #Rover Commands
