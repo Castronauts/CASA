@@ -91,7 +91,7 @@ class Joystick_Object(object):
 
     def updateGripperLoad(self, msg):
         self.gripper_load = msg.load
-        print(self.gripper_load)
+        #print(self.gripper_load)
 
     def vibrateXbox(self, msg):
         if (msg.data == 1):
@@ -271,11 +271,11 @@ class Joystick_Object(object):
                     open_button = self.joystick.get_button(0)
 
                 #Check close button only
-                while (close_button != 0 and open_button == 0.0 and self.gripper_msg.data <= 0.4 and self.gripper_load > -0.1):
+                while (close_button != 0 and open_button == 0.0 and self.gripper_msg.data <= 0.4 and self.gripper_load > -0.15):
                     #Send and sleep to repeat
                     self.gripper_msg.data = self.gripper_msg.data + 0.01
                     self.gripper_pub.publish(self.gripper_msg)
-                    rospy.sleep(0.02)
+                    rospy.sleep(0.08)
 
                     #Recheck values
                     pygame.event.get()
