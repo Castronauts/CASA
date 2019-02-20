@@ -5,7 +5,7 @@
 import sys
 import pygame
 import time
-from tcpcom import TCPClient #IP socket for camera
+from tcpcom import TCPClient #IP socket for cameras
 import math
 
 #ROS Libraries
@@ -23,17 +23,30 @@ class Joystick_Object(object):
         self.gripper_load = 0.0
 
         #----------------------------------------------------------------------------------------------------
-        #Pan/Tilt Camera IP Socket
+        #Pan/Tilt Camera IP Socket Camera #1
         #----------------------------------------------------------------------------------------------------
         self.IP_ADDRESS = "192.168.1.9"
         self.IP_PORT = 23000
-        self.client = TCPClient(self.IP_ADDRESS, self.IP_PORT, stateChanged = self.onStateChanged)
+        self.client = TCPClient(self.IP_ADDRESS, self.IP_PORT, stateChanged = self.onStateChangedOne)
         self.rc = self.client.connect()
 
         if(self.rc):
-            print("Connected")
+            print("Connected 1")
         else:
-            print("Not connected")
+            print("Not connected 1")
+
+        #----------------------------------------------------------------------------------------------------
+        #Pan/Tilt Camera IP Socket Camera #2
+        #----------------------------------------------------------------------------------------------------
+        self.IP_ADDRESS_2 = "192.168.1.8"
+        self.IP_PORT_2 = 24000
+        self.client_2 = TCPClient(self.IP_ADDRESS_2, self.IP_PORT_2, stateChanged = self.onStateChangedTwo)
+        self.rc_2 = self.client_2.connect()
+
+        if(self.rc_2):
+            print("Connected 2")
+        else:
+            print("Not connected 2")
 
         #----------------------------------------------------------------------------------------------------
         #Pygame/Joystick Initialization
@@ -71,7 +84,7 @@ class Joystick_Object(object):
         #Initialize rover stuff
         self.rover_pub = rospy.Publisher("arlo_wheels", String, queue_size=10)
         self.rover_msg = String()
-        self.rover_speed = 40.0 #Out of 200 max
+        self.rover_speed = 20.0 #Out of 200 max
         self.rover_msg.data = "rst\r"
         self.rover_pub.publish(self.rover_msg)
 
@@ -81,7 +94,15 @@ class Joystick_Object(object):
     #----------------------------------------------------------------------------------------------------
     #Function Declarations
     #----------------------------------------------------------------------------------------------------
-    def onStateChanged(self, state, msg):
+    def onStateChangedOne(self, state, msg):
+        if state == "CONNECTING":
+           print "Client:-- Waiting for connection..."
+        elif state == "CONNECTED":
+           print "Client:-- Connection estabished."
+        elif state == "DISCONNECTED":
+           print "Client:-- Connection lost."
+
+    def onStateChangedTwo(self, state, msg):
         if state == "CONNECTING":
            print "Client:-- Waiting for connection..."
         elif state == "CONNECTED":
@@ -95,11 +116,14 @@ class Joystick_Object(object):
 
     def vibrateXbox(self, msg):
         if (msg.data == 1):
-            self.xbox.set_rumble(0.5, 0.5, 500)
+            self.xbox.set_rumble(0.25, 0.25, 500)
             rospy.sleep(0.5)
+        if (msg.data == 2):
+            self.xbox.set_rumble(0.8, 0.8, 750)
+            rospy.sleep(0.75)
 
     def gripperVibrate(self):
-        self.xbox.set_rumble(0.8, 0.8, 800)
+        self.xbox.set_rumble(0.8, 0.8, 500)
         rospy.sleep(0.5)
 
     def degreeHeading(self, x, y):
@@ -138,6 +162,8 @@ class Joystick_Object(object):
             #Get Button Values
             open_button = self.joystick.get_button(0) #A button
             close_button = self.joystick.get_button(1) #B button
+            tilt_up_button = self.joystick.get_button(3) #Y button
+            tilt_down_button = self.joystick.get_button(2) #X button
 
             #Get bumper values
             arm_down = self.joystick.get_button(4) #Left bumper
@@ -271,7 +297,7 @@ class Joystick_Object(object):
                     open_button = self.joystick.get_button(0)
 
                 #Check close button only
-                while (close_button != 0 and open_button == 0.0 and self.gripper_msg.data <= 0.4 and self.gripper_load > -0.15):
+                while (close_button != 0 and open_button == 0.0 and self.gripper_msg.data <= 0.65 and self.gripper_load > -0.15):
                     #Send and sleep to repeat
                     self.gripper_msg.data = self.gripper_msg.data + 0.01
                     self.gripper_pub.publish(self.gripper_msg)
@@ -400,7 +426,7 @@ class Joystick_Object(object):
                 rospy.sleep(0.1)
 
             #----------------------------------------------------------------------------------------------------
-            #Pan/Tilt Commands
+            #Pan/Tilt Commands Camera 1
             #----------------------------------------------------------------------------------------------------
             #Check pad presses
             if (camera_pads[0] != 0 or camera_pads[1] != 0):
@@ -437,6 +463,30 @@ class Joystick_Object(object):
                     pygame.event.get()
                     camera_pads = self.joystick.get_hat(0)
 
+            #----------------------------------------------------------------------------------------------------
+            #Tilt Commands Camera 2
+            #----------------------------------------------------------------------------------------------------
+            if (tilt_up_button != 0.0 or tilt_down_button != 0.0):
+                #Check tilt up button only
+                while (tilt_up_button != 0 and tilt_down_button == 0.0):
+                    #Send up command to camera 2
+                    self.client_2.sendMessage("up")
+                    time.sleep(0.001)
+
+                    #Recheck values
+                    pygame.event.get()
+                    tilt_up_button = self.joystick.get_button(2)
+
+                #Check tilt down button only
+                while (tilt_down_button != 0 and tilt_up_button == 0.0):
+                    #Send down command to camera 2
+                    self.client_2.sendMessage("down")
+                    time.sleep(0.001)
+
+                    #Recheck values
+                    pygame.event.get()
+                    tilt_down_button = self.joystick.get_button(3)
+
             #Make sure stop rover
             self.rover_msg.data = "go 0 0\r"
             self.rover_pub.publish(self.rover_msg)
@@ -453,11 +503,16 @@ class Joystick_Object(object):
             self.rate.sleep()
 
         self.client.disconnect()
+        self.client_2.disconnect()
         pygame.quit()
 
 #----------------------------------------------------------------------------------------------------
 #Main Function start
 #----------------------------------------------------------------------------------------------------
 if __name__ == '__main__':
-    joystick_controll = Joystick_Object()
-    joystick_controll.runLoop()
+    try:
+        joystick_controll = Joystick_Object()
+        joystick_controll.runLoop()
+
+    except rospy.ROSInterruptException:
+        pass

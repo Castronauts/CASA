@@ -67,9 +67,18 @@ class Ui_main_window(object):
         self.z_top_label.setAlignment(QtCore.Qt.AlignCenter)
         self.z_top_label.setObjectName(_fromUtf8("z_top_label"))
         self.Z_Axis_Layout.addWidget(self.z_top_label)
+        self.z_max_up_label = QtGui.QLabel(main_window)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.z_max_up_label.setFont(font)
+        self.z_max_up_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.z_max_up_label.setObjectName(_fromUtf8("z_max_up_label"))
+        self.Z_Axis_Layout.addWidget(self.z_max_up_label)
         self.z_axis_layout_helper = QtGui.QHBoxLayout()
         self.z_axis_layout_helper.setObjectName(_fromUtf8("z_axis_layout_helper"))
         self.z_axis_bar = QtGui.QScrollBar(main_window)
+        self.z_axis_bar.setEnabled(False) #----------------------------------------------------------------
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -84,6 +93,14 @@ class Ui_main_window(object):
         self.z_axis_bar.setObjectName(_fromUtf8("z_axis_bar"))
         self.z_axis_layout_helper.addWidget(self.z_axis_bar)
         self.Z_Axis_Layout.addLayout(self.z_axis_layout_helper)
+        self.z_max_down_label = QtGui.QLabel(main_window)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.z_max_down_label.setFont(font)
+        self.z_max_down_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.z_max_down_label.setObjectName(_fromUtf8("z_max_down_label"))
+        self.Z_Axis_Layout.addWidget(self.z_max_down_label)
         self.z_bottom_label = QtGui.QLabel(main_window)
         self.z_bottom_label.setAlignment(QtCore.Qt.AlignCenter)
         self.z_bottom_label.setObjectName(_fromUtf8("z_bottom_label"))
@@ -110,9 +127,18 @@ class Ui_main_window(object):
         self.x_left_label.setAlignment(QtCore.Qt.AlignCenter)
         self.x_left_label.setObjectName(_fromUtf8("x_left_label"))
         self.X_Axis_Layout.addWidget(self.x_left_label)
+        self.x_max_left_label = QtGui.QLabel(main_window)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.x_max_left_label.setFont(font)
+        self.x_max_left_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.x_max_left_label.setObjectName(_fromUtf8("x_max_left_label"))
+        self.X_Axis_Layout.addWidget(self.x_max_left_label)
         self.x_axis_layout_helper = QtGui.QHBoxLayout()
         self.x_axis_layout_helper.setObjectName(_fromUtf8("x_axis_layout_helper"))
         self.x_axis_bar = QtGui.QScrollBar(main_window)
+        self.x_axis_bar.setEnabled(False) #---------------------------------------------------------
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -121,10 +147,17 @@ class Ui_main_window(object):
         self.x_axis_bar.setMinimumSize(QtCore.QSize(15, 250))
         self.x_axis_bar.setMaximumSize(QtCore.QSize(15, 250))
         self.x_axis_bar.setOrientation(QtCore.Qt.Vertical)
-        #self.x_axis_bar.setInvertedAppearance(True)
         self.x_axis_bar.setObjectName(_fromUtf8("x_axis_bar"))
         self.x_axis_layout_helper.addWidget(self.x_axis_bar)
         self.X_Axis_Layout.addLayout(self.x_axis_layout_helper)
+        self.x_max_right_label = QtGui.QLabel(main_window)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.x_max_right_label.setFont(font)
+        self.x_max_right_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.x_max_right_label.setObjectName(_fromUtf8("x_max_right_label"))
+        self.X_Axis_Layout.addWidget(self.x_max_right_label)
         self.x_right_label = QtGui.QLabel(main_window)
         self.x_right_label.setAlignment(QtCore.Qt.AlignCenter)
         self.x_right_label.setObjectName(_fromUtf8("x_right_label"))
@@ -151,9 +184,19 @@ class Ui_main_window(object):
         self.y_forward_label.setAlignment(QtCore.Qt.AlignCenter)
         self.y_forward_label.setObjectName(_fromUtf8("y_forward_label"))
         self.Y_Axis_Layout.addWidget(self.y_forward_label)
+        self.y_max_fwd_label = QtGui.QLabel(main_window)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.y_max_fwd_label.setFont(font)
+        self.y_max_fwd_label.setTextFormat(QtCore.Qt.AutoText)
+        self.y_max_fwd_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.y_max_fwd_label.setObjectName(_fromUtf8("y_max_fwd_label"))
+        self.Y_Axis_Layout.addWidget(self.y_max_fwd_label)
         self.y_axis_layout_helper = QtGui.QHBoxLayout()
         self.y_axis_layout_helper.setObjectName(_fromUtf8("y_axis_layout_helper"))
         self.y_axis_bar = QtGui.QScrollBar(main_window)
+        self.y_axis_bar.setEnabled(False) #---------------------------------------------------------
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -167,6 +210,14 @@ class Ui_main_window(object):
         self.y_axis_bar.setObjectName(_fromUtf8("y_axis_bar"))
         self.y_axis_layout_helper.addWidget(self.y_axis_bar)
         self.Y_Axis_Layout.addLayout(self.y_axis_layout_helper)
+        self.y_max_back_label = QtGui.QLabel(main_window)
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.y_max_back_label.setFont(font)
+        self.y_max_back_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.y_max_back_label.setObjectName(_fromUtf8("y_max_back_label"))
+        self.Y_Axis_Layout.addWidget(self.y_max_back_label)
         self.y_backward_label = QtGui.QLabel(main_window)
         self.y_backward_label.setAlignment(QtCore.Qt.AlignCenter)
         self.y_backward_label.setObjectName(_fromUtf8("y_backward_label"))
@@ -216,14 +267,36 @@ class Ui_main_window(object):
         self.gripper_label.setText(_translate("main_window", "Gripper Movement Limits", None))
         self.z_top_label.setText(_translate("main_window", "Top Limit", None))
         self.z_bottom_label.setText(_translate("main_window", "Bottom Limit", None))
+        self.z_max_up_label.setText(_translate("main_window", "Max Height", None))
+        self.z_max_down_label.setText(_translate("main_window", "Minimum Height", None))
         self.z_label.setText(_translate("main_window", "Z-Axis", None))
         self.x_left_label.setText(_translate("main_window", "Left Limit", None))
         self.x_right_label.setText(_translate("main_window", "Right Limit", None))
+        self.x_max_left_label.setText(_translate("main_window", "Max Left", None))
+        self.x_max_right_label.setText(_translate("main_window", "Max Right", None))
         self.x_label.setText(_translate("main_window", "X_Axis", None))
         self.y_forward_label.setText(_translate("main_window", "Forward Limit", None))
         self.y_backward_label.setText(_translate("main_window", "Backward Limit", None))
+        self.y_max_fwd_label.setText(_translate("main_window", "Max Forward", None))
+        self.y_max_back_label.setText(_translate("main_window", "Max Backward", None))
         self.y_label.setText(_translate("main_window", "Y-Axis", None))
         self.battery_level_label.setText(_translate("main_window", "Battery Level: 0.0V", None))
+
+        #Set color of max labels to red
+        self.z_max_up_label.setStyleSheet('color: red')
+        self.z_max_down_label.setStyleSheet('color: red')
+        self.x_max_left_label.setStyleSheet('color: red')
+        self.x_max_right_label.setStyleSheet('color: red')
+        self.y_max_fwd_label.setStyleSheet('color: red')
+        self.y_max_back_label.setStyleSheet('color: red')
+
+        #Hide max labels initially
+        self.z_max_up_label.hide()
+        self.z_max_down_label.hide()
+        self.x_max_left_label.hide()
+        self.x_max_right_label.hide()
+        self.y_max_fwd_label.hide()
+        self.y_max_back_label.hide()
 
     #####################################################################################Additional Functions#########################################################################################
     def battery_progress(self, battery):
@@ -233,24 +306,94 @@ class Ui_main_window(object):
         self.battery_bar.setProperty("value", int(percent))
         self.battery_level_label.setText(_translate("main_window", "Battery Level: " + str(actual_battery) + "V", None))
 
-    def updateXBar(self, data):
+    def updateXBar(self, data, window):
         self.x_axis_bar.setSliderPosition(data.data)
 
-    def updateYBar(self, data):
+        if(data.data >= 98): #Max right achieved
+            window.emit(QtCore.SIGNAL('X_Show_Hide'), 1)
+
+        elif (data.data <= 2): #Max left achieved
+            window.emit(QtCore.SIGNAL('X_Show_Hide'), -1)
+
+        elif (data.data < 98 and data.data > 2): #Hide objects
+            window.emit(QtCore.SIGNAL('X_Show_Hide'), 0)
+
+
+    def updateYBar(self, data, window):
         self.y_axis_bar.setSliderPosition(data.data)
 
-    def updateZBar(self, data):
+        if(data.data >= 98): #Max forward achieved
+            window.emit(QtCore.SIGNAL('Y_Show_Hide'), 1)
+
+        elif (data.data <= 2): #Max backward achieved
+            window.emit(QtCore.SIGNAL('Y_Show_Hide'), -1)
+
+        elif (data.data < 98 and data.data > 2): #Hide objects
+            window.emit(QtCore.SIGNAL('Y_Show_Hide'), 0)
+
+    def updateZBar(self, data, window):
         self.z_axis_bar.setSliderPosition(data.data)
+
+        if(data.data >= 98): #Max height achieved
+            window.emit(QtCore.SIGNAL('Z_Show_Hide'), 1)
+
+        elif (data.data <= 2): #Max down achieved
+            window.emit(QtCore.SIGNAL('Z_Show_Hide'), -1)
+
+        elif (data.data < 98 and data.data > 2): #Hide objects
+            window.emit(QtCore.SIGNAL('Z_Show_Hide'), 0)
+
+    def xShowHide(self, value):
+        if (value == 1):
+            self.x_max_left_label.hide()
+            self.x_max_right_label.show()
+
+        elif (value == -1):
+            self.x_max_right_label.hide()
+            self.x_max_left_label.show()
+
+        else:
+            self.x_max_left_label.hide()
+            self.x_max_right_label.hide()
+
+    def yShowHide(self, value):
+        if (value == 1):
+            self.y_max_fwd_label.show()
+            self.y_max_back_label.hide()
+
+        elif (value == -1):
+            self.y_max_fwd_label.hide()
+            self.y_max_back_label.show()
+
+        else:
+            self.y_max_fwd_label.hide()
+            self.y_max_back_label.hide()
+
+    def zShowHide(self, value):
+        if (value == 1):
+            self.z_max_up_label.show()
+            self.z_max_down_label.hide()
+
+        elif (value == -1):
+            self.z_max_up_label.hide()
+            self.z_max_down_label.show()
+
+        else:
+            self.z_max_up_label.hide()
+            self.z_max_down_label.hide()
 
     def initros(self, window):
     	rospy.init_node('Motor_Control_Talker', anonymous=True)
         self.pub = rospy.Publisher('speed_arlo', String, queue_size=100)
-        rospy.Subscriber("x_gui", Int64, self.updateXBar)
-        rospy.Subscriber("y_gui", Int64, self.updateYBar)
-        rospy.Subscriber("z_gui", Int64, self.updateZBar)
+        rospy.Subscriber("x_gui", Int64, self.updateXBar, window)
+        rospy.Subscriber("y_gui", Int64, self.updateYBar, window)
+        rospy.Subscriber("z_gui", Int64, self.updateZBar, window)
         self.battery_thread = ThreadClass() #Start thread for constantly getting the battery level
         self.battery_thread.start()
         window.connect(self.battery_thread, QtCore.SIGNAL("Battery_Value"), self.battery_progress) #Now connect main window thread for receiving that value
+        window.connect(window, QtCore.SIGNAL("X_Show_Hide"), self.xShowHide) #1 show right, -1 show left, 0 hide
+        window.connect(window, QtCore.SIGNAL("Y_Show_Hide"), self.yShowHide) #1 show forward, -1 show back, 0 hide
+        window.connect(window, QtCore.SIGNAL("Z_Show_Hide"), self.zShowHide) #1 show height, -1 show min height, 0 hide
 
 
 class ThreadClass(QtCore.QThread):
@@ -270,5 +413,5 @@ if __name__ == "__main__":
     ui = Ui_main_window()
     ui.setupUi(main_window)
     main_window.show()
-    main_window.setEnabled(False);
+    #main_window.setEnabled(False)
     sys.exit(app.exec_())

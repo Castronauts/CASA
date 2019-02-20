@@ -28,12 +28,12 @@
 #include <stdio.h>
 #include <cmath>
 
-#define forward_limit 0.47
-#define backward_limit 0.37
-#define left_right_limit 0.1
+#define forward_limit 0.5
+#define backward_limit 0.42
+#define left_right_limit 0.08
 #define up_limit 0.3
 #define down_limit 0.06
-#define load_limit 0.4
+#define MAX_LOAD 0.37
 #define PLANNING_GROUP "Arm"
 
 //Arm Controller Object
@@ -41,27 +41,33 @@ class ArmController
 {
 	public:
 		ArmController():
-			spinner(2), //2 working for all signals
+			spinner(3),
 			move_group(PLANNING_GROUP),
 			rt_planner(move_group.getRobotModel(), PLANNING_GROUP)
 		{
 			//ROS
 			spinner.start();
 			setting = -1;
+			control_signals [0] = 0.0;
+			control_signals [1] = 0.0;
+			control_signals [2] = 0.0;
+			control_change = 0.0;
+			stop_movement = -1;
 
 			//Move It Declarations
 			joint_model_group = move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
 
 			//Controller Topic Signals
-			control_sub = nh.subscribe("control_signal", 10, this->updateControlSignal); //10 buffer message size might be better response time than 1
-			joint_2 = nh.subscribe("joint2_controller/state", 10, this->checkJoint2Load);
-			joint_3 = nh.subscribe("joint3_controller/state", 10, this->checkJoint3Load);
-			joint_5 = nh.subscribe("joint5_controller/state", 10, this->checkJoint5Load);
+			control_sub = nh.subscribe("control_signal", 10, &ArmController::updateControlSignal, this); //10 buffer message size might be better response time than 1
+			joint_2 = nh.subscribe("joint2_controller/state", 10, &ArmController::checkJoint2Load, this);
+			//joint_3 = nh.subscribe("joint3_controller/state", 10, &ArmController::checkJoint3Load, this);
+			//joint_5 = nh.subscribe("joint5_controller/state", 10, &ArmController::checkJoint5Load, this);
 
 			//Arm publisher for gui and xbox
 			x_gui = nh.advertise<std_msgs::Int64>("x_gui", 10);
 			y_gui = nh.advertise<std_msgs::Int64>("y_gui", 10);
 			z_gui = nh.advertise<std_msgs::Int64>("z_gui", 10);
+
 			xbox_vibrate = nh.advertise<std_msgs::Int64>("xbox_vibrate", 10);
 
 			//Save initial behavior
@@ -75,7 +81,7 @@ class ArmController
 		void runROSLoop()
 		{
 			//ROS Wait
-			ros::Rate r(20);
+			ros::Rate r(50);
 
 			//Control Signal Settings
 			std_msgs::Int64 gui_msg;
@@ -98,7 +104,7 @@ class ArmController
 					ros::Duration(0.1).sleep(); //Wait so move group can calculate its position quick enough
 					updateTargetPose();
 
-					if(!(control_signals[0] == 0.0 && control_signals[1] == 0.0 && control_signals[2] == 0.0))
+					if(!(control_signals[0] == 0.0 && control_signals[1] == 0.0 && control_signals[2] == 0.0) && (stop_movement == -1))
 					{
 						double ret; //Return number from compute
 						moveit::planning_interface::MoveGroupInterface::Plan my_plan; //Plan for final move
@@ -142,7 +148,8 @@ class ArmController
 
 					if ((gui_control >= 98 or gui_control <= 2))
 					{
-						gui_msg.data = 1; //Vibrate setting
+						//Vibrate setting
+						gui_msg.data = 1;
 						xbox_vibrate.publish(gui_msg);
 						ros::Duration(0.5).sleep();
 						xbox_sent = true;
@@ -190,8 +197,9 @@ class ArmController
 		}
 
 	private:
-		static float control_signals [3];
-		static int control_change;
+		float control_signals [3];
+		int control_change;
+		int stop_movement;
 		int setting;
 
 		//ROS Declarations
@@ -208,8 +216,8 @@ class ArmController
 		//Controller Topic Signals
 		ros::Subscriber control_sub; //10 buffer message size might be better response time than 1
 		ros::Subscriber joint_2;
-		ros::Subscriber joint_3;
-		ros::Subscriber joint_5;
+		//ros::Subscriber joint_3;
+		//ros::Subscriber joint_5;
 
 		//Arm publisher for gui and xbox
 		ros::Publisher x_gui;
@@ -221,7 +229,7 @@ class ArmController
 		geometry_msgs::PoseStamped target_pose;
 		geometry_msgs::PoseStamped current_pose;
 
-		static void updateControlSignal(const geometry_msgs::Point::ConstPtr& msg)
+		void updateControlSignal(const geometry_msgs::Point::ConstPtr& msg)
 		{
 			if(control_signals[0] != msg->x || control_signals[1] != msg->y || control_signals[2] != msg->z)
 			{
@@ -297,16 +305,23 @@ class ArmController
 		{
 			if(control_signals[0] != 0.0)
 			{
-				target_pose.pose.position.x = control_signals[0]*left_right_limit;
+				if (control_signals[0] > 0) //Right
+				{
+					target_pose.pose.position.x = control_signals[0]*left_right_limit;
+				}
+				else if(control_signals[0] < 0) //Left
+				{
+					target_pose.pose.position.x = control_signals[0]*left_right_limit;
+				}
 				setting = 0;
 			}
 			else if(control_signals[1] != 0.0)
 			{
-				if (control_signals[1] > 0)
+				if (control_signals[1] > 0) //Forward
 				{
 					target_pose.pose.position.y = forward_limit;
 				}
-				else
+				else if(control_signals[1] < 0) //Backward
 				{
 					target_pose.pose.position.y = backward_limit;
 				}
@@ -314,11 +329,11 @@ class ArmController
 			}
 			else if(control_signals[2] != 0.0)
 			{
-				if (control_signals[2] > 0)
+				if (control_signals[2] > 0) //Up
 				{
 					target_pose.pose.position.z = up_limit;
 				}
-				else
+				else if(control_signals[2] < 0) //Down
 				{
 					target_pose.pose.position.z = down_limit;
 				}
@@ -334,52 +349,213 @@ class ArmController
 			*ret = move_group.computeCartesianPath(waypoints, 0.01, 0, *trajectory);
 		}
 
-		static void checkJoint2Load(dynamixel_msgs::JointState msg)
+		int checkLoadCommand()
 		{
-			double load = std::abs(msg.load);
+			int signal = 5; //Default to down as thats what we dont want to push
 
-			if (load >= 0.38)
+			if(control_signals[0] != 0.0)
 			{
-				//Signal vibrate and capture what move turned it on
-
+				if (control_signals[0] > 0) //Right
+				{
+					signal = 0;
+				}
+				else //Left
+				{
+					signal = 1;
+				}
+			}
+			else if(control_signals[1] != 0.0)
+			{
+				if (control_signals[1] > 0)//Forward
+				{
+					signal = 2;
+				}
+				else //Backward
+				{
+					signal = 3;
+				}
+			}
+			else if(control_signals[2] != 0.0)
+			{
+				if (control_signals[2] > 0) //Up
+				{
+					signal = 4;
+				}
+				else //Down
+				{
+					signal = 5;
+				}
 			}
 
+			return signal;
+		}
+
+		void correctLoadPosition()
+		{
+			if(stop_movement == 0) //Right
+			{
+				target_pose.pose.position.x = target_pose.pose.position.x - 0.02; //Move left then
+			}
+			else if (stop_movement == 1) //Left
+			{
+				target_pose.pose.position.x = target_pose.pose.position.x + 0.02; //Move right then
+			}
+			else if (stop_movement == 2) //Forward
+			{
+				target_pose.pose.position.y = target_pose.pose.position.y - 0.02; //Move backward then
+			}
+			else if (stop_movement == 3) //Backward
+			{
+				target_pose.pose.position.y = target_pose.pose.position.y + 0.02; //Move forward then
+			}
+			else if (stop_movement == 4) //Up
+			{
+				target_pose.pose.position.z = target_pose.pose.position.z - 0.1; //Move down then
+			}
+			else if (stop_movement == 5) //Down
+			{
+				target_pose.pose.position.z = target_pose.pose.position.z + 0.1; //Move up then
+			}
 
 		}
 
-		static void checkJoint3Load(dynamixel_msgs::JointState msg)
+		void checkJoint2Load(dynamixel_msgs::JointState msg)
 		{
+			std_msgs::Int64 gui_msg;
 			double load = std::abs(msg.load);
 
-			if (load >= 0.38)
+			if ((load >= MAX_LOAD) && (stop_movement == -1)) //Max load reached
 			{
-				//signal stop and capture what move put it here
-			}
+				//Check what command
+				stop_movement = checkLoadCommand();
 
+				//Wait because it could be spikes
+				ros::Duration(0.5).sleep();
+
+				if(load >= MAX_LOAD) //Check again after waiting to see if it is actually an issue and not just a millisecond spike
+				{
+					//Stop move group
+					move_group.stop();
+					ros::Duration(0.1).sleep();
+
+					//Now move in opposite direction of the last recorded command until load is fixed
+					double ret;
+					moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+					moveit_msgs::RobotTrajectory trajectory;
+
+					//Set correct target position based on which control signal is set
+					correctLoadPosition();
+
+					//Compute straight trajectory and set it in trajectory and set ret (i.e shouldnt be 0)
+					computeStraightTrajectory(&ret, &trajectory);
+
+					if (ret != 0) //Need to reposition arm to keep moving
+					{
+						//Set TimeStamps or pseudo velocity and acceleration
+						rt_planner.setRobotTrajectoryMsg(*(move_group.getCurrentState()), trajectory);
+						time_planner.computeTimeStamps(rt_planner, 0.5, 0.5); //Trajectory, velocity, acceleration
+						rt_planner.getRobotTrajectoryMsg(trajectory);
+
+						//Set plan and execute
+						my_plan.trajectory_ = trajectory;
+						move_group.execute(my_plan);
+						ROS_ERROR("Fixed load");
+					}
+
+					//Vibrate
+					gui_msg.data = 2; //Vibrate setting
+					xbox_vibrate.publish(gui_msg);
+					ros::Duration(0.75).sleep();
+
+					stop_movement = -1;
+				}
+				else
+				{
+					stop_movement = -1;
+				}
+			}
 		}
 
-		static void checkJoint5Load(dynamixel_msgs::JointState msg)
+		/*void checkJoint3Load(dynamixel_msgs::JointState msg)
 		{
+			std_msgs::Int64 gui_msg;
 			double load = std::abs(msg.load);
 
-			if (load >= 0.38)
+			if (load >= MAX_LOAD) //Max load reached
 			{
-				//signal stop and capture what move put it here
+				//Stop move group
+				move_group.stop();
+				ros::Duration(0.1).sleep(); //Wait so move group can calculate its position quick enough
+
+				//Check what command
+				stop_movement = checkLoadCommand();
+
+				ROS_ERROR("Joint3[%d]", stop_movement);
+
+				//Vibrate
+				gui_msg.data = 2; //Vibrate setting
+				xbox_vibrate.publish(gui_msg);
+				ros::Duration(0.75).sleep();
 			}
 
+			if (load >= PLACE_LOAD) //Just vibrate for placement onto ground
+			{
+				//Vibrate
+				gui_msg.data = 2; //Vibrate setting
+				xbox_vibrate.publish(gui_msg);
+				ros::Duration(0.75).sleep();
+			}
+
+			if (load < PLACE_LOAD)
+			{
+				stop_movement = -1; //Free up movement now
+			}
 		}
+
+		void checkJoint5Load(dynamixel_msgs::JointState msg)
+		{
+			std_msgs::Int64 gui_msg;
+			double load = std::abs(msg.load);
+
+			if (load >= MAX_LOAD) //Max load reached
+			{
+				//Stop move group
+				move_group.stop();
+				ros::Duration(0.1).sleep(); //Wait so move group can calculate its position quick enough
+
+				//Check what command
+				stop_movement = checkLoadCommand();
+
+				ROS_ERROR("Joint5[%d]", stop_movement);
+
+				//Vibrate
+				gui_msg.data = 2; //Vibrate setting
+				xbox_vibrate.publish(gui_msg);
+				ros::Duration(0.75).sleep();
+			}
+
+			if (load >= PLACE_LOAD) //Just vibrate for placement onto ground
+			{
+				//Vibrate
+				gui_msg.data = 2; //Vibrate setting
+				xbox_vibrate.publish(gui_msg);
+				ros::Duration(0.75).sleep();
+			}
+
+			if (load < PLACE_LOAD)
+			{
+				stop_movement = -1; //Free up movement now
+			}
+		}*/
 };
 
-//Initialize static members
-float ArmController::control_signals [3] = {0.0, 0.0, 0.0};
-int ArmController::control_change = 0.0;
 
 //---------------------------------------------------------------------------------------------------------------------------------------------
 //Main Function
 //---------------------------------------------------------------------------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-	ros::init(argc, argv, "cartesian_keyboard_controller");
+	ros::init(argc, argv, "arm_controller");
 
 	ArmController controller;
 
