@@ -143,6 +143,24 @@ class Joystick_Object(object):
 
         return final_degree
 
+    def stopMotion(self):
+        #Turn off motion arm
+        self.arm_msg.z = 0.0
+        self.arm_msg.y = 0.0
+        self.arm_msg.x = 0.0
+        self.arm_pub.publish(self.arm_msg)
+        rospy.sleep(0.1)
+
+        #Stop rover twice to make sure
+        self.rover_msg.data = "go 0 0\r"
+        self.rover_pub.publish(self.rover_msg)
+        rospy.sleep(0.1)
+        self.rover_msg.data = "go 0 0\r"
+        self.rover_pub.publish(self.rover_msg)
+        rospy.sleep(0.1)
+
+
+
     def runLoop(self):
         while (not rospy.is_shutdown()):
             #Check user input
@@ -212,11 +230,7 @@ class Joystick_Object(object):
                     rospy.sleep(0.1)
 
                 #Turn off motion
-                self.arm_msg.z = 0.0
-                self.arm_msg.y = 0.0
-                self.arm_msg.x = 0.0
-                self.arm_pub.publish(self.arm_msg)
-                rospy.sleep(0.1)
+                self.stopMotion()
 
             #Check only joystick arm x and y
             if ((abs(x_right) >= 0.6 or abs(y_right) >= 0.6) and (arm_up == 0.0 and arm_down == 0.0)):
@@ -273,11 +287,7 @@ class Joystick_Object(object):
                     rospy.sleep(0.1)
 
                 #Shutdown values
-                self.arm_msg.z = 0.0
-                self.arm_msg.y = 0.0
-                self.arm_msg.x = 0.0
-                self.arm_pub.publish(self.arm_msg)
-                rospy.sleep(0.1)
+                self.stopMotion()
 
 
             #----------------------------------------------------------------------------------------------------
@@ -381,11 +391,7 @@ class Joystick_Object(object):
                     y_left = self.joystick.get_axis(1)
 
                 #Make sure send stop signal after
-                self.rover_msg.data = "go 0 0\r"
-                self.rover_pub.publish(self.rover_msg)
-                rospy.sleep(0.1)
-                self.rover_pub.publish(self.rover_msg)
-                rospy.sleep(0.1)
+                self.stopMotion()
 
             #Checking only in place turning without moving forward or backward
             if ((abs(x_left) >= 0.6 or abs(y_left) >= 0.6) and (trigger_left <= 0.0 and trigger_right <= 0.0)):
@@ -419,11 +425,7 @@ class Joystick_Object(object):
                     rospy.sleep(0.1)
 
                 #Stop just in case keeps moving
-                self.rover_msg.data = "go 0 0\r"
-                self.rover_pub.publish(self.rover_msg)
-                rospy.sleep(0.1)
-                self.rover_pub.publish(self.rover_msg)
-                rospy.sleep(0.1)
+                self.stopMotion()
 
             #----------------------------------------------------------------------------------------------------
             #Pan/Tilt Commands Camera 1
@@ -471,7 +473,7 @@ class Joystick_Object(object):
                 while (tilt_up_button != 0 and tilt_down_button == 0.0):
                     #Send up command to camera 2
                     self.client_2.sendMessage("up")
-                    time.sleep(0.001)
+                    time.sleep(0.0001)
 
                     #Recheck values
                     pygame.event.get()
@@ -481,23 +483,17 @@ class Joystick_Object(object):
                 while (tilt_down_button != 0 and tilt_up_button == 0.0):
                     #Send down command to camera 2
                     self.client_2.sendMessage("down")
-                    time.sleep(0.001)
+                    time.sleep(0.0001)
 
                     #Recheck values
                     pygame.event.get()
                     tilt_down_button = self.joystick.get_button(3)
 
-            #Make sure stop rover
-            self.rover_msg.data = "go 0 0\r"
-            self.rover_pub.publish(self.rover_msg)
-            rospy.sleep(0.1)
+            #Stop motion
+            self.stopMotion()
 
-            #Make sure stop arm
-            self.arm_msg.z = 0.0
-            self.arm_msg.y = 0.0
-            self.arm_msg.x = 0.0
-            self.arm_pub.publish(self.arm_msg)
-            rospy.sleep(0.1)
+            #Stop motion
+            self.stopMotion()
 
             #Final ROS sleep rate
             self.rate.sleep()

@@ -1,0 +1,7 @@
+<launch>
+	<node name="cartesian_keyboard_controller_v4" pkg="armstrong_master" type="cartesian_keyboard_controller_v4" />
+
+	<node name="master_interface" pkg="armstrong_master" type="Armstrong_Final_GUI.py" output="screen"/>
+
+	<node name="joystick_controller" pkg="armstrong_master" type="joystick_controller.py" output="screen"/>
+</launch>

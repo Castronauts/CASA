@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <cmath>
 
-#define forward_limit 0.5
+#define forward_limit 0.48
 #define backward_limit 0.42
 #define left_right_limit 0.08
 #define up_limit 0.3
