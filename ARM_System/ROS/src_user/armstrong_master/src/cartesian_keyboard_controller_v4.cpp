@@ -32,7 +32,7 @@
 #define backward_limit 0.42
 #define left_right_limit 0.08
 #define up_limit 0.3
-#define down_limit 0.06
+#define down_limit 0.03
 #define MAX_LOAD 0.37
 #define PLANNING_GROUP "Arm"
 
