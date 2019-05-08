@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html class="ie ie8"> <![endif]-->
+<!--[if IE 9]><html class="ie ie9"> <![endif]-->
+<!--[if gt IE 9]><!-->	<html> <!--<![endif]-->
+<head>
+<!-- Basic -->
+<meta charset="utf-8">
+<title>PyQt QSlider Widget and Signal</title>
+<meta name="description" content="PyQt QSlider Widget and Signal - Learn PyQt starting from Introduction, Hello World, Major Classes, Using Qt Designer, Signals and Slots, Layout Management, QBoxLayout, QGridLayout, QFormLayout Class, QLabel Widget, QLineEdit Widget, QPushButton Widget, QRadioButton Widget, QCheckBox Widget, QComboBox Widget, QSpinBox Widget, QSlider Widget and Signal, QMenuBar, QMenu and QAction Widgets, QToolBar Widget, QDialog Class, QMessageBox, QInputDialog, QFontDialog Widget, QFileDialog Widget, QTabWidget, QStackedWidget, QSplitter Widget, Multiple Document Interface, Drag and Drop, Database Handling, Drawing API, BrushStyle Constants, QClipboard, QDockWidget, QStatusBar Widget, QListWidget, QPixmap Class, QScrollBar Widget, QCalendar Widget." />
+<meta name="keywords" content="PyQt, Tutorial, Introduction, Hello World, Major Classes, Using Qt Designer, Signals and Slots, Layout Management, QBoxLayout, QGridLayout, QFormLayout Class, QLabel Widget, QLineEdit Widget, QPushButton Widget, QRadioButton Widget, QCheckBox Widget, QComboBox Widget, QSpinBox Widget, QSlider Widget and Signal, QMenuBar, QMenu and QAction Widgets, QToolBar Widget, QDialog Class, QMessageBox, QInputDialog, QFontDialog Widget, QFileDialog Widget, QTabWidget, QStackedWidget, QSplitter Widget, Multiple Document Interface, Drag and Drop, Database Handling, Drawing API, BrushStyle Constants, QClipboard, QDockWidget, QStatusBar Widget, QListWidget, QPixmap Class, QScrollBar Widget, QCalendar Widget." />
+<base href="https://www.tutorialspoint.com/" />
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes">
+<meta property="og:locale" content="en_US" />
+<meta property="og:type" content="website" />
+<meta property="fb:app_id" content="471319149685276" />
+<meta property="og:site_name" content="www.tutorialspoint.com" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="author" content="tutorialspoint.com">
+<script type="text/javascript" src="https://www.tutorialspoint.com/theme/js/script-min-v4.js?v=2"></script>
+<link rel="stylesheet" href="https://www.tutorialspoint.com/theme/css/style-min.css?v=3">
+<script async='async' src='https://www.googletagservices.com/tag/js/gpt.js'></script>
+<script>
+  var googletag = googletag || {};
+  googletag.cmd = googletag.cmd || [];
+</script>
+<script>
+googletag.cmd.push(function() {
+    googletag.defineSlot('/60931893/tutorial_right_bottom', [[300, 250], [300, 600]], 'div-gpt-ad-1510138782906-0').addService(googletag.pubads());
+    googletag.defineSlot('/60931893/tutorial_right_middle', [[300, 250], [300, 600]], 'div-gpt-ad-1510138782906-1').addService(googletag.pubads());
+    googletag.defineSlot('/60931893/tutorial_right_top', [300, 250], 'div-gpt-ad-1510138782906-2').addService(googletag.pubads());
+    googletag.defineSlot('/60931893/tutorial_bottom_leader_board', [[600, 400], [300, 250], [480, 320], [468, 60], [336, 280], [600, 200], [580, 400]], 'div-gpt-ad-1510138782906-3').addService(googletag.pubads());
+    googletag.pubads().enableSingleRequest();
+    googletag.enableServices();
+});
+function openNav() {	
+  document.getElementById("mySidenav").style.width = "250px";
+  document.getElementById("right_obs").style.display = "block";
+}
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+  document.getElementById("right_obs").style.display = "none";
+}
+function close_obs_sidenav(){
+  document.getElementById("mySidenav").style.width = "0";
+  document.getElementById("right_obs").style.display = "none";
+}
+</script>
+<!-- Head Libs -->
+<!--[if IE 8]>
+<link rel="stylesheet" type="text/css" href="/theme/css/ie8.css">
+<![endif]-->
+<style>
+select{ border:0 !important; outline: 1px inset black !important; outline-offset: -1px !important; }
+.btnsbmt{ background: #519B0C !important;}
+ul.nav-list.primary>li a.videolink{    background: none; margin: 0px; padding: 0px; border: 1px solid #d6d6d6;}
+div.feature-box div.feature-box-icon, .col-md-3 .course-box, li.heading, div.footer-copyright { background: #519B0C url(/images/pattern.png) repeat center center !important;}
+.sub-main-menu .sub-menuu div:hover, .sub-main-menu .viewall, header nav ul.nav-main li a:hover, button.btn-responsive-nav, header div.search button.btn-default { background: #519B0C !important;}
+.submenu-item{ border-bottom: 2px solid #519B0C !important; border-top: 2px solid #519B0C !important }
+.ace_scroller{overflow: auto!important;}
+a.demo{font-family: "Open Sans",Arial,sans-serif; background:#519B0C; color:#fff; font-size:13px; padding:3px 10px; border:1px solid #d6d6d6; position:absolute; right:5px; margin:-6px 17px 0px 0px;}
+a.demo:hover{opacity:.8}
+</style>
+<script>
+$(document).ready(function() {
+  $('input[name="q"]').keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+});
+</script>
+</head>
+<body onload="prettyPrint()">
+<div class="wrapLoader">
+   <div class="imgLoader">
+      <img  src="/images/loading-cg.gif" alt="" width="70" height="70" />
+   </div>
+</div>
+<div id="right_obs" class="display-none" onclick="close_obs_sidenav()"></div>
+<header>
+   <div class="container">			
+      <h1 class="logo">
+      <a href="index.htm" title="tutorialspoint">
+      <img alt="tutorialspoint" src="/pyqt/images/logo.png">
+      </a>
+      </h1>			
+      <ul class="tp-inline-block pull-right" id="tp-head-icons">
+        <li>
+           <div class="tp-second-nav tp-display-none tp-pointer" onclick="openNav()">
+              <i class="fa fa-th-large fa-lg"></i>
+           </div>
+        </li>
+     </ul>
+     <button class="btn btn-responsive-nav btn-inverse" data-toggle="collapse" data-target=".nav-main-collapse" id="pull" style="top: 24px!important"> <i class="icon icon-bars"></i> </button>
+      <nav>
+         <ul class="nav nav-pills nav-top">
+            <li><a href="/about/about_careers.htm" style="background: #fffb09; font-weight: bold;"><i class="icon icon-suitcase"></i> Jobs</a></li>
+            <li> <a target="_blank" href="/programming_examples/"><i class="fa fa-cubes"></i> &nbsp;Examples</a> </li>
+            <li> <a href="https://www.tutorialspoint.com/whiteboard.htm"><img src="theme/css/icons/image-editor.png" alt="Whiteboard" title="Whiteboard"> &nbsp;Whiteboard</a> </li>
+            <li> <a href="https://www.tutorialspoint.com/netmeeting.php"><i class="fa-camera"></i> &nbsp;Net Meeting</a> </li>
+            <li> <a href="/online_dev_tools.htm"> <i class="dev-tools-menu" style="opacity:.5"></i> Tools </a> </li>
+            <li> <a href="/articles/index.php"><i class="icon icon-file-text-o"></i> &nbsp;Articles</a> </li>            
+            <li class="top-icons">
+              <ul class="social-icons">
+              <li class="facebook"><a href="https://www.facebook.com/tutorialspointindia" target="_blank" data-placement="bottom" title="tutorialspoint @ Facebook">Facebook</a></li>
+              <li class="googleplus"><a href="https://plus.google.com/u/0/116678774017490391259/posts" target="_blank" data-placement="bottom" title="tutorialspoint @ Google+">Google+</a></li>
+              <li class="twitter"><a href="https://www.twitter.com/tutorialspoint" target="_blank" data-placement="bottom" title="tutorialspoint @ Twitter">Twitter</a></li>
+              <li class="linkedin"><a href="https://www.linkedin.com/company/tutorialspoint" target="_blank" data-placement="bottom" title="tutorialspoint @ Linkedin">Linkedin</a></li>
+              <li class="youtube"><a href="https://www.youtube.com/channel/UCVLbzhxVTiTLiVKeGV7WEBg" target="_blank" data-placement="bottom" title="tutorialspoint YouTube">YouTube</a></li>
+              </ul>
+           </li>
+         </ul>
+      </nav>
+    </div>
+     <div class="sidenav" id="mySidenav">
+     <div class="navbar nav-main">
+      <div class="container">
+         <nav class="nav-main mega-menu">
+            <ul class="nav nav-pills nav-main" id="mainMenu">
+               <li class="dropdown no-sub-menu"> <a class="dropdown" href="index.htm"><i class="icon icon-home"></i> Home</a> </li>   
+               <li class="dropdown no-sub-menu"><a class="dropdown" href="/questions/index.php"><i class="fa fa-send"></i> Q/A </a> </li>
+               <li class="dropdown"><a class="dropdown" href="tutorialslibrary.htm"><span class="tut-lib"> Library </span></a></li>
+               <li class="dropdown no-sub-menu"><a class="dropdown" href="videotutorials/index.htm"><i class="fa-toggle-right"></i> Videos </a></li>
+               <li class="dropdown no-sub-menu"><a class="dropdown" href="tutor_connect/index.php"><i class="fa-user"> </i> Tutors</a></li>
+               <li class="dropdown no-sub-menu"><a class="dropdown" href="codingground.htm"><i class="fa-code"></i> Coding Ground </a> </li>
+               <li class="dropdown no-sub-menu"><a class="dropdown" href="https://store.tutorialspoint.com/"><i class="fa-usd"></i> Store </a> </li>
+               <li class="dropdown no-sub-menu">
+                  <div class="searchform-popup">
+                     <input class="header-search-box" type="text" id="search-string" name="q" placeholder="Search your favorite tutorials..." onfocus="if (this.value == 'Search your favorite tutorials...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Search your favorite tutorials...';}" autocomplete="off">
+                     <div class="magnifying-glass"><i class="icon-search"></i> Search </div>
+                 </div>
+               </li>
+            </ul>
+         </nav>
+        </div>
+      </div>	
+     </div>	
+   </div>	
+</header>
+<div style="clear:both;"></div>
+<div role="main" class="main">
+<div class="container">
+<div class="row">
+<div class="col-md-2">
+<aside class="sidebar">
+<style>
+.ts{
+   text-align:center !important;
+   vertical-align:middle !important;
+}
+</style>
+<div class="mini-logo">
+<img src="/pyqt/images/pyqt-mini-logo.jpg" alt="PyQt Tutorial" />
+</div>
+<ul class="nav nav-list primary left-menu" >
+<li class="heading">PyQt Tutorial</li>
+<li><a href="/pyqt/index.htm">PyQt - Home</a></li>
+<li><a href="/pyqt/pyqt_introduction.htm">PyQt - Introduction</a></li>
+<li><a href="/pyqt/pyqt_hello_world.htm">PyQt - Hello World</a></li>
+<li><a href="/pyqt/pyqt_major_classes.htm">PyQt - Major Classes</a></li>
+<li><a href="/pyqt/pyqt_using_qt_designer.htm">PyQt - Using Qt Designer</a></li>
+<li><a href="/pyqt/pyqt_signals_and_slots.htm">PyQt - Signals and Slots</a></li>
+<li><a href="/pyqt/pyqt_layout_management.htm">PyQt - Layout Management</a></li>
+<li><a href="/pyqt/pyqt_basic_widgets.htm">PyQt - Basic Widgets</a></li>
+<li><a href="/pyqt/pyqt_qdialog_class.htm">PyQt - QDialog Class</a></li>
+<li><a href="/pyqt/pyqt_qmessagebox.htm">PyQt - QMessageBox</a></li>
+<li><a href="/pyqt/pyqt_multiple_document_interface.htm">PyQt - Multiple Document Interface</a></li>
+<li><a href="/pyqt/pyqt_drag_and_drop.htm">PyQt - Drag and Drop</a></li>
+<li><a href="/pyqt/pyqt_database_handling.htm">PyQt - Database Handling</a></li>
+<li><a href="/pyqt/pyqt_drawing_api.htm">PyQt - Drawing API</a></li>
+<li><a href="/pyqt/pyqt_brushstyle_constants.htm">PyQt - BrushStyle Constants</a></li>
+<li><a href="/pyqt/pyqt_qclipboard.htm">PyQt - QClipboard</a></li>
+<li><a href="/pyqt/pyqt_qpixmap_class.htm">PyQt - QPixmap Class</a></li>
+</ul>
+<ul class="nav nav-list primary left-menu" >
+<li class="heading">PyQt Useful Resources</li>
+<li><a href="/pyqt/pyqt_quick_guide.htm">PyQt - Quick Guide</a></li>
+<li><a href="/pyqt/pyqt_useful_resources.htm">PyQt - Useful Resources</a></li>
+<li><a href="/pyqt/pyqt_discussion.htm">PyQt - Discussion</a></li>
+</ul>
+<ul class="nav nav-list primary push-bottom left-menu special">
+<li class="sreading">Selected Reading</li>
+<li><a target="_top" href="/upsc_ias_exams.htm">UPSC IAS Exams Notes</a></li>
+<li><a target="_top" href="/developers_best_practices/index.htm">Developer's Best Practices</a></li>
+<li><a target="_top" href="/questions_and_answers.htm">Questions and Answers</a></li>
+<li><a target="_top" href="/effective_resume_writing.htm">Effective Resume Writing</a></li>
+<li><a target="_top" href="/hr_interview_questions/index.htm">HR Interview Questions</a></li>
+<li><a target="_top" href="/computer_glossary.htm">Computer Glossary</a></li>
+<li><a target="_top" href="/computer_whoiswho.htm">Who is Who</a></li>
+</ul>
+</aside>
+</div>
+<!-- PRINTING STARTS HERE -->
+<div class="row">
+<div class="content">
+<div class="col-md-7 middle-col">
+<h1>PyQt - QSlider Widget &amp; Signal</h1>
+<div class="topgooglead">
+<hr />
+<div style="padding-bottom:5px;padding-left:10px;">Advertisements</div>
+<script type="text/javascript"><!--
+google_ad_client = "pub-7133395778201029";
+google_ad_width = 468;
+google_ad_height = 60;
+google_ad_format = "468x60_as";
+google_ad_type = "image";
+google_ad_channel = "";
+//--></script>
+<script type="text/javascript" 
+src="https://pagead2.googlesyndication.com/pagead/show_ads.js"> 
+</script>
+</div>
+<hr />
+<div class="pre-btn">
+<a href="/pyqt/pyqt_basic_widgets.htm"><i class="icon icon-arrow-circle-o-left big-font"></i> Previous Page</a>
+</div>
+<div class="nxt-btn">
+<a href="/pyqt/pyqt_basic_widgets.htm">Next Page <i class="icon icon-arrow-circle-o-right big-font"></i>&nbsp;</a>
+</div>
+<div class="clearer"></div>
+<hr />
+<p><b>QSlider</b> class object presents the user with a groove over which a handle can be moved. It is a classic widget to control a bounded value. Position of the handle on the groove is equivalent to an integer between the lower and the upper bounds of the control.</p>
+<p>A slider control can be displayed in horizontal or vertical manner by mentioning the orientation in the constructor.</p>
+<pre class="result notranslate">
+self.sp = QSlider(Qt.Horizontal)
+self.sp = QSlider(Qt.Vertical)
+</pre>
+<p>The following table lists some of the frequently used methods of QSlider class &minus;</p>
+<section class="toggle">
+<label>Given below are the most commonly used methods of QSlider.</label>
+<div class="toggle-content">
+<table class="table table-bordered">
+<tr>
+<th style="text-align:center;width:10%;">Sr.No.</th>
+<th style="text-align:center;">Methods &amp; Description</th>
+</tr>
+<tr>
+<td class="ts">1</td>
+<td>
+<p><b>setMinimum()</b></p>
+<p>Sets the lower bound of the slider</p></td>
+</tr>
+<tr>
+<td class="ts">2</td>
+<td>
+<p><b>setMaximum()</b></p>
+<p>Sets the upper bound of the slider</p></td>
+</tr>
+<tr>
+<td class="ts">3</td>
+<td>
+<p><b>setSingleStep()</b></p>
+<p>Sets the increment/decrement step</p></td>
+</tr>
+<tr>
+<td class="ts">4</td>
+<td>
+<p><b>setValue()</b></p>
+<p>Sets the value of the control programmatically</p></td>
+</tr>
+<tr>
+<td class="ts">5</td>
+<td>
+<p><b>value()</b></p>
+<p>Returns the current value</p></td>
+</tr>
+<tr>
+<td class="ts">6</td>
+<td>
+<p><b>setTickInterval()</b></p>
+<p>Puts the number of ticks on the groove</p></td>
+</tr>
+<tr>
+<td class="ts">7</td>
+<td>
+<p><b>setTickPosition()</b></p>
+<p>Places the ticks on the groove. Values are &minus;</p>
+<table class="table table-bordered">
+<tr>
+<td>QSlider.NoTicks</td>
+<td>No tick marks</td>
+</tr>
+<tr>
+<td>QSlider.TicksBothSides</td>
+<td>Tick marks on both sides</td>
+</tr>
+<tr>
+<td>QSlider.TicksAbove</td>
+<td>Tick marks above the slider</td>
+</tr>
+<tr>
+<td>QSlider.TicksBelow</td>
+<td>Tick marks below the slider</td>
+</tr>
+<tr>
+<td>QSlider.TicksLeft</td>
+<td>Tick marks to the left of the slider</td>
+</tr>
+<tr>
+<td>QSlider.TicksRight</td>
+<td>Tick marks to the right of the slider</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</div>
+</section>
+<h2>QSlider Signals</h2>
+<table class="table table-bordered">
+<tr>
+<th style="text-align:center;width:10%;">Sr.No.</th>
+<th style="text-align:center;">Methods &amp; Description</th>
+</tr>
+<tr>
+<td class="ts">1</td>
+<td>
+<p><b>valueChanged()</b></p>
+<p>When the slider's value has changed</p></td>
+</tr>
+<tr>
+<td class="ts">2</td>
+<td>
+<p><b>sliderPressed()</b></p>
+<p>When the user starts to drag the slider</p></td>
+</tr>
+<tr>
+<td class="ts">3</td>
+<td>
+<p><b>sliderMoved()</b></p>
+<p>When the user drags the slider</p></td>
+</tr>
+<tr>
+<td class="ts">4</td>
+<td>
+<p><b>sliderReleased()</b></p>
+<p>When the user releases the slider</p></td>
+</tr>
+</table>
+<p>valueChanged() signal is the one which is most frequently used.</p>
+<h3>Example</h3>
+<p>The following example demonstrates the above functionality. A Label and a horizontal slider is placed in a vertical layout. Slider’s valueChanged() signal is connected to valuechange() method.</p>
+<pre class="result notranslate">
+self.sl.valueChanged.connect(self.valuechange)
+</pre>
+<p>The slot function valuechange() reads current value of the slider and uses it as the size of font for label’s caption.</p>
+<pre class="result notranslate">
+size = self.sl.value()
+self.l1.setFont(QFont("Arial",size))
+</pre>
+<p>The complete code is as follows &minus;</p>
+<pre class="prettyprint notranslate">
+import sys
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+
+class sliderdemo(QWidget):
+   def __init__(self, parent = None):
+      super(sliderdemo, self).__init__(parent)
+
+      layout = QVBoxLayout()
+      self.l1 = QLabel("Hello")
+      self.l1.setAlignment(Qt.AlignCenter)
+      layout.addWidget(self.l1)
+		
+      self.sl = QSlider(Qt.Horizontal)
+      self.sl.setMinimum(10)
+      self.sl.setMaximum(30)
+      self.sl.setValue(20)
+      self.sl.setTickPosition(QSlider.TicksBelow)
+      self.sl.setTickInterval(5)
+		
+      layout.addWidget(self.sl)
+      self.sl.valueChanged.connect(self.valuechange)
+      self.setLayout(layout)
+      self.setWindowTitle("SpinBox demo")
+
+   def valuechange(self):
+      size = self.sl.value()
+      self.l1.setFont(QFont("Arial",size))
+		
+def main():
+   app = QApplication(sys.argv)
+   ex = sliderdemo()
+   ex.show()
+   sys.exit(app.exec_())
+	
+if __name__ == '__main__':
+   main()
+</pre>
+<p>The above code produces the following output &minus;</p>
+<img src="/pyqt/images/widget_and_signal_output.jpg" alt="Widget and Signal Output" />
+<p>The font size of the label changes as handle of the slider is moved across the handle.</p>
+<hr />
+<div class="pre-btn">
+<a href="/pyqt/pyqt_basic_widgets.htm"><i class="icon icon-arrow-circle-o-left big-font"></i> Previous Page</a>
+</div>
+<div class="print-btn center">
+<a href="/cgi-bin/printpage.cgi" target="_blank"><i class="icon icon-print big-font"></i> Print</a>
+</div>
+<div class="nxt-btn">
+<a href="/pyqt/pyqt_basic_widgets.htm">Next Page <i class="icon icon-arrow-circle-o-right big-font"></i>&nbsp;</a>
+</div>
+<div class="parent-file">pyqt_basic_widgets.htm</div>
+<hr />
+<!-- PRINTING ENDS HERE -->
+<div class="bottomgooglead">
+<div class="bottomadtag">Advertisements</div>
+<!-- /60931893/tutorial_bottom_leader_board -->
+<div id='div-gpt-ad-1510138782906-3'>
+<script>
+googletag.cmd.push(function() { googletag.display('div-gpt-ad-1510138782906-3'); });
+</script>
+</div>
+</div>
+</div>
+</div>
+<div class="row">
+<div class="col-md-3" id="rightbar">
+<div class="ysubscribe">
+  <script async src="https://apis.google.com/js/platform.js"></script>
+  <div class="g-ytsubscribe" data-channelid="UCVLbzhxVTiTLiVKeGV7WEBg" data-layout="full" data-count="default"></div>
+</div>
+<div class="ysubscribe">
+<a href="https://store.tutorialspoint.com/" target="_blank"><img alt="E-Books Store" src="/images/buy_ebooks_online.jpg"/></a>
+</div>
+<div class="rightgooglead">
+<!-- /60931893/tutorial_right_top -->
+<div id='div-gpt-ad-1510138782906-2' style='height:250px; width:300px;'>
+<script>
+googletag.cmd.push(function() { googletag.display('div-gpt-ad-1510138782906-2'); });
+</script>
+</div>
+</div>
+<div class="rightgooglead">
+<!-- /60931893/tutorial_right_middle -->
+<div id='div-gpt-ad-1510138782906-1'>
+<script>
+googletag.cmd.push(function() { googletag.display('div-gpt-ad-1510138782906-1'); });
+</script>
+</div>
+</div>
+<div class="rightgooglead">
+<!-- /60931893/tutorial_right_bottom -->
+<div id='div-gpt-ad-1510138782906-0'>
+<script>
+googletag.cmd.push(function() { googletag.display('div-gpt-ad-1510138782906-0'); });
+</script>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="footer-copyright">
+<div class="container">
+<div class="row">
+<div class="col-md-1">
+<a href="index.htm" class="logo"> <img alt="Tutorials Point" class="img-responsive" src="/scripts/img/logo-footer.png"> </a>
+</div>
+<div class="col-md-4 col-sm-12 col-xs-12">
+   <nav id="sub-menu">
+      <ul>
+         <li><a href="/about/faq.htm">FAQ's</a></li>
+         <li><a href="/about/about_privacy.htm#cookies">Cookies Policy</a></li>
+         <li><a href="/about/contact_us.htm">Contact</a></li>
+      </ul>
+   </nav>
+</div>
+<div class="col-md-3 col-sm-12 col-xs-12">
+<p>&copy; Copyright 2018. All Rights Reserved.</p>
+</div>
+<div class="col-md-4 col-sm-12 col-xs-12">
+   <div class="news-group">
+      <input type="text" class="form-control-foot search" name="textemail" id="textemail" autocomplete="off" placeholder="Enter email for newsletter" onfocus="if (this.value == 'Enter email for newsletter...') {this.value = '';}" onblur="if (this.value == '') {this.value = 'Enter email for newsletter...';}">
+      <span class="input-group-btn"> <button class="btn btn-default btn-footer" id="btnemail" type="submit" onclick="javascript:void(0);">go</button> </span>
+      <div id="newsresponse"></div>
+   </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Libs -->
+<script type="text/javascript" src="/theme/js/custom-min.js?v=7"></script>
+<script src="https://www.google-analytics.com/urchin.js">
+</script>
+<script type="text/javascript">
+_uacct = "UA-232293-6";
+urchinTracker();
+$('.pg-icon').click(function(){
+   $('.wrapLoader').show();
+});
+</script>
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "PyQt QSlider Widget and Signal",
+    "name": "PyQt QSlider Widget and Signal",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://www.tutorialspoint.com/pyqt/pyqt_qslider_widget_signal.htm"
+    },
+    "image": {
+        "@type": "ImageObject",
+        "url": "https://www.tutorialspoint.com/pyqt/images/widget_and_signal_output.jpg",
+        "width": 256,
+        "height": 152
+    },
+    "author": {
+        "@type": "Organization",
+        "name": "Tutorials Point",
+        "url": "https://www.tutorialspoint.com",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.tutorialspoint.com/images/logo60.png",
+            "width": 210,
+            "height": 60
+        }
+    },
+    "datePublished": "January 08 2018 06:21:53.",
+    "dateModified": "January 08 2018 06:21:53.",
+    "publisher": {
+        "@type": "Organization",
+        "name": "Tutorials Point",
+        "url": "https://www.tutorialspoint.com",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://www.tutorialspoint.com/images/logo60.png",
+            "width": 210,
+            "height": 60
+        }
+    },
+    "description": "QSlider class object presents the user with a groove over which a handle can be moved. It is a classic widget to control a bounded value. Position of the handle on the groove is equivalent to an integer between the lower and the upper bounds of the contro..."
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+        {
+            "@type": "ListItem",
+            "position": 1,
+            "item": {
+                "name": "www.tutorialspoint.com",
+                "@id": "https://www.tutorialspoint.com"
+            }
+        },
+        {
+            "@type": "ListItem",
+            "position": 2,
+            "item": {
+                "name": "Pyqt",
+                "@id": "https://www.tutorialspoint.com/pyqt"
+            }
+        },
+        {
+            "@type": "ListItem",
+            "position": 3,
+            "item": {
+                "name": null
+            }
+        }
+    ]
+}
+</script>
+</div>
+</body>
+</html>

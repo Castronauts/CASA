@@ -1,0 +1,16 @@
+<RCC>
+  <qresource prefix="resources">
+    <file>resources.qrc</file>
+    <file>bottomarrow_normal.png</file>
+    <file>bottomarrow_pressed.png</file>
+    <file>leftarrow_normal.png</file>
+    <file>leftarrow_pressed.png</file>
+    <file>rightarrow_normal.png</file>
+    <file>rightarrow_pressed.png</file>
+    <file>toparrow_pressed.png</file>
+    <file>toparrow_normal.png</file>
+    <file>moon.png</file>
+    <file>High resolution picture of the moon. - Imgur.jpg</file>
+    <file>earth_rising_moon.jpg</file>
+  </qresource>
+</RCC>

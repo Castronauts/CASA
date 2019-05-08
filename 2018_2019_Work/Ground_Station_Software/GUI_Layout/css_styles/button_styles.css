@@ -1,0 +1,67 @@
+#forward_button
+{
+	background-color: transparent;
+	border-image: url(:/resources/toparrow_normal.png);
+	background: none;
+	border: none;
+	background-repeat: none;
+}
+#forward_button:pressed
+{
+	border-image: url(:/resources/toparrow_pressed.png);
+}
+#forward_button:focus
+{
+	outline: none;
+}
+
+#backward_button
+{
+	background-color: transparent;
+	border-image: url(:/resources/bottomarrow_normal.png);
+	background: none;
+	border: none;
+	background-repeat: none;
+}
+#backward_button:pressed
+{
+	border-image: url(:/resources/bottomarrow_pressed.png);
+}
+#backward_button:focus
+{
+	outline: none;
+}
+
+#left_button
+{
+	background-color: transparent;
+	border-image: url(:/resources/leftarrow_normal.png);
+	background: none;
+	border: none;
+	background-repeat: none;
+}
+#left_button:pressed
+{
+	border-image: url(:/resources/leftarrow_pressed.png);
+}
+#left_button:focus
+{
+	outline: none;
+}
+
+#right_button
+{
+	background-color: transparent;
+	border-image: url(:/resources/rightarrow_normal.png);
+	background: none;
+	border: none;
+	background-repeat: none;
+}
+#right_button:pressed
+{
+	border-image: url(:/resources/rightarrow_pressed.png);
+}
+#right_button:focus
+{
+	outline: none;
+}

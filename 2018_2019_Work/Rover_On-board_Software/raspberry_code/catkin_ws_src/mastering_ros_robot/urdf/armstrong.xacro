@@ -1,0 +1,639 @@
+<?xml version="1.0"?>
+<robot name="armstrong" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+	<!-- //////////////////////////////////////////////////////////////////////////// -->
+	<!--Xacro Properties-->
+	<!-- //////////////////////////////////////////////////////////////////////////// -->
+	<xacro:property name="deg_to_rad" value="0.01745329251994329577"/>
+	<xacro:property name="M_PI" value="3.14159"/>
+
+	<!--http://wiki.ros.org/urdf/XML/Transmission-->
+	<xacro:macro name="transmission_block" params="joint_name">
+		<transmission name="tran1">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="${joint_name}">
+				<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="motor1">
+				<hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+				<mechanicalReduction>1</mechanicalReduction>
+			</actuator>
+		</transmission>
+	</xacro:macro>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--ARLO Link Base Frame-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <link
+    name="base_link">
+		<inertial>
+      <origin
+        xyz="0.000642334886840512 -0.00918989728881375 0.15144445751703"
+        rpy="0 0 0" />
+      <mass
+        value="3.72304786520706" />
+      <inertia
+        ixx="0.0449452843063658"
+        ixy="-8.13830811365391E-05"
+        ixz="-0.000567018644234333"
+        iyy="0.0845135999112776"
+        iyz="-0.00256109565292216"
+        izz="0.0543313915567669" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--Link 1 Spin Table-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <link
+    name="Link_1">
+    <inertial>
+      <origin
+        xyz="-0.000295599531515089 -0.0050694041200408 0.0262904206780893"
+        rpy="0 0 0" />
+      <mass
+        value="0.231017580172464" />
+      <inertia
+        ixx="1.39224819737156E-05"
+        ixy="3.16966178167247E-07"
+        ixz="1.52017921099788E-07"
+        iyy="2.61244195879679E-06"
+        iyz="-5.42858579794049E-06"
+        izz="1.1327792166679E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_0"
+    type="fixed">
+    <origin
+      xyz="0 0.147389590761843 0.111124999999998"
+      rpy="0 6.98296267768627E-15 6.98296267768627E-15" />
+    <parent
+      link="base_link" />
+    <child
+      link="Link_1" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--Link 2 Dual Motors-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <link
+    name="Link_2">
+    <inertial>
+      <origin
+        xyz="0.000245997952605159 5.18900594968785E-06 0.0337679913335289"
+        rpy="0 0 0" />
+      <mass
+        value="0.266262084814045" />
+      <inertia
+        ixx="0.000104593288743262"
+        ixy="2.13438344279435E-08"
+        ixz="-1.18288811562897E-06"
+        iyy="0.00032148615989113"
+        iyz="1.76046645274627E-08"
+        izz="0.000216893011548678" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_1"
+    type="revolute">
+    <origin
+      xyz="0 0 0.04318"
+      rpy="6.98296267768627E-15 0 -6.98296267768627E-15" />
+    <parent
+      link="Link_1" />
+    <child
+      link="Link_2" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-1.5708" upper="1.5708" effort="24" velocity="6.07"/>
+  </joint>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--Link 3 Sturdy Base Servo-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <link
+    name="Link_3">
+    <inertial>
+      <origin
+        xyz="0.000201293827647442 0.00441389267870827 0.12675435695043"
+        rpy="0 0 0" />
+      <mass
+        value="0.205570387117977" />
+      <inertia
+        ixx="0.000945810281839495"
+        ixy="-3.75279192756167E-07"
+        ixz="-2.68829797915708E-06"
+        iyy="0.000980318331283739"
+        iyz="-8.22410693097532E-05"
+        izz="6.07849054159079E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_2"
+    type="revolute">
+    <origin
+      xyz="0 0 0.0670364002434545"
+      rpy="1.33861536954324E-12 -6.98885806120157E-09 -1.31861661004669E-12" />
+    <parent
+      link="Link_2" />
+    <child
+      link="Link_3" />
+    <axis
+      xyz="1 0 0" />
+    <limit lower="-1.91288086" upper="1.91288086" effort="48" velocity="6.07"/>
+  </joint>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--Link 4 First Wrist Rotate-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <link
+    name="Link_4">
+    <inertial>
+      <origin
+        xyz="-8.22270928568791E-08 0.00358599191437327 0.0626435730095933"
+        rpy="0 0 0" />
+      <mass
+        value="0.145524620366664" />
+      <inertia
+        ixx="4.93098686773543E-05"
+        ixy="5.89377990972886E-11"
+        ixz="5.91336907921079E-11"
+        iyy="6.58934003599806E-05"
+        iyz="9.43389639479683E-08"
+        izz="2.46228458803864E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_3"
+    type="revolute">
+    <origin
+      xyz="1.79999894009408E-05 0.0292119999936017 0.1917240000158"
+      rpy="3.32428011080213E-15 3.61394601646668E-15 -1.39659020047236E-14" />
+    <parent
+      link="Link_3" />
+    <child
+      link="Link_4" />
+    <axis
+      xyz="1 0 0" />
+    <limit lower="-2.7227136" upper="0.356047" effort="24" velocity="6.07"/>
+  </joint>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--Link 5 Reach Girder-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <link
+    name="Link_5">
+    <inertial>
+      <origin
+        xyz="0.000429978732766456 -7.0232266652509E-06 0.0337099670163837"
+        rpy="0 0 0" />
+      <mass
+        value="0.0812905905488399" />
+      <inertia
+        ixx="9.39737633066184E-06"
+        ixy="-1.04591568016406E-10"
+        ixz="-5.44323642033752E-08"
+        iyy="9.3976569237048E-06"
+        iyz="-1.8056954003407E-08"
+        izz="3.4998577136393E-10" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_5.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_5.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_4"
+    type="revolute">
+    <origin
+      xyz="0 -0.00669799998980004 0.1003601999984"
+      rpy="-1.95701482895409E-16 -6.96589563095315E-15 2.30673060684073E-08" />
+    <parent
+      link="Link_4" />
+    <child
+      link="Link_5" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-3.14159265" upper="3.14159265" effort="24" velocity="6.07"/>
+  </joint>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--Link 6 Second Wrist Rotate-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <link
+    name="Link_6">
+    <inertial>
+      <origin
+        xyz="-3.38120155041199E-07 -0.00151253089666441 0.0532875061187637"
+        rpy="0 0 0" />
+      <mass
+        value="0.0927319563288835" />
+      <inertia
+        ixx="2.20187618318443E-05"
+        ixy="-1.79450945670291E-11"
+        ixz="2.90513976464271E-10"
+        iyy="3.01646889575727E-05"
+        iyz="2.43983145821587E-06"
+        izz="1.00074692806394E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_6.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_6.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_5"
+    type="revolute">
+    <origin
+      xyz="0 0 0.0526599999884"
+      rpy="4.9973748652526E-07 -6.98884415650133E-09 -1.74585298068004E-14" />
+    <parent
+      link="Link_5" />
+    <child
+      link="Link_6" />
+    <axis
+      xyz="1 0 0" />
+    <limit lower="-1.91288086" upper="1.91288086" effort="24" velocity="6.07"/>
+  </joint>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--Link 7 Grippers-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <link
+    name="Link_7">
+    <inertial>
+      <origin
+        xyz="-2.23067071783989E-05 -0.00133789741905997 0.0220242310868904"
+        rpy="0 0 0" />
+      <mass
+        value="0.123680974496004" />
+      <inertia
+        ixx="2.45041167636038E-05"
+        ixy="2.21546568984653E-09"
+        ixz="1.63355680293107E-08"
+        iyy="5.29618388373048E-05"
+        iyz="2.58579745481831E-06"
+        izz="3.26866508599107E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_7.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_7.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_6"
+    type="revolute">
+    <origin
+      xyz="0 -0.0147499999999997 0.0936450000090002"
+      rpy="-1.05298985515949E-14 6.98045622575094E-15 6.98297180950059E-15" />
+    <parent
+      link="Link_6" />
+    <child
+      link="Link_7" />
+    <axis
+      xyz="0 0 1" />
+    <limit lower="-2.617993878" upper="2.617993878" effort="10" velocity="6.07"/>
+  </joint>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--Link 8 Left Gripper-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <link
+    name="Link_8">
+    <inertial>
+      <origin
+        xyz="0.0143 -0.023862 0.023722"
+        rpy="0 0 0" />
+      <mass
+        value="0.027053" />
+      <inertia
+        ixx="2.7531E-05"
+        ixy="-3.0411E-07"
+        ixz="-2.9977E-07"
+        iyy="2.9398E-06"
+        iyz="7.1644E-06"
+        izz="2.5394E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_8.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_8.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_7"
+    type="revolute">
+    <origin
+      xyz="0.0186360000084238 -0.000852000011599963 0.0411360000095722"
+      rpy="-1.17373567259265E-16 1.39776721927775E-08 -1.25987633750737E-16" />
+    <parent
+      link="Link_7" />
+    <child
+      link="Link_8" />
+    <axis
+      xyz="0 1 0" />
+    <limit lower="0" upper="0.40" effort="10" velocity="6.07"/>
+  </joint>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--Link 9 Right Gripper-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <link
+    name="Link_9">
+    <inertial>
+      <origin
+        xyz="-0.014201 -0.024279 0.023724"
+        rpy="0 0 0" />
+      <mass
+        value="0.027053" />
+      <inertia
+        ixx="2.7501E-05"
+        ixy="3.9722E-07"
+        ixz="2.7586E-07"
+        iyy="2.935E-06"
+        iyz="7.1406E-06"
+        izz="2.5379E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_9.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://mastering_ros_robot/meshes/armstrong_meshes/Link_9.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="Joint_8"
+    type="revolute">
+    <origin
+      xyz="-0.018636 -0.000426000011599953 0.0411359999999997"
+      rpy="-1.29121702479446E-16 1.39776998144446E-08 -1.24326241119813E-16" />
+    <parent
+      link="Link_7" />
+    <child
+      link="Link_9" />
+    <axis
+      xyz="0 1 0" />
+    <limit lower="-0.40" upper="0" effort="10" velocity="6.07"/>
+    <mimic joint="Joint_7" multiplier="-1"/>
+  </joint>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--EEF Reference Frame-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <link name="Link_EEF">
+  	<visual>
+  		<geometry>
+  			<sphere radius="0.001"/>
+  		</geometry>
+
+  		<material name="">
+  			<color rgba="0.75294 0.75294 0.75294 1" />
+  		</material>
+  	</visual>
+  </link>
+  <joint
+    name="Joint_EEF"
+    type="fixed">
+    <origin
+      xyz="-2.40325633111271E-05 -0.0883617330439031 0.0805346693789171"
+      rpy="-4.99738824883467E-07 1.39776870622754E-08 -2.30659633733869E-08" />
+    <parent
+      link="Link_7" />
+    <child
+      link="Link_EEF" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--Transmissions ROS Control-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <xacro:transmission_block joint_name="Joint_1"/>
+  <xacro:transmission_block joint_name="Joint_2"/>
+  <xacro:transmission_block joint_name="Joint_3"/>
+  <xacro:transmission_block joint_name="Joint_4"/>
+  <xacro:transmission_block joint_name="Joint_5"/>
+  <xacro:transmission_block joint_name="Joint_6"/>
+  <xacro:transmission_block joint_name="Joint_7"/>
+  <xacro:transmission_block joint_name="Joint_8"/>
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <!--Gazebo_ROS_Control Plugin-->
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+  <gazebo>
+      <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+        <robotNamespace>/armstrong</robotNamespace>
+      </plugin>
+  </gazebo>
+
+</robot>
